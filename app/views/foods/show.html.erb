@@ -1,0 +1,121 @@
+<div class="food-show-container">
+  <% if @food.image.attached? %>
+    <%= image_tag url_for(@food.image), width: "100%", height: "auto", class: "food-image" %>
+  <% else %>
+    <p class="text-muted">No image available.</p>
+  <% end %>
+
+  <h1 class="food-title"><%= @food.name %></h1>
+
+  <p><strong>Price:</strong> ₦<%= number_to_currency(@food.price, unit: "", precision: 2) %></p>
+  <p><strong>Description:</strong> <%= @food.description.presence || "No description available." %></p>
+
+  <div class="categories">
+    <p><strong>Categories:</strong></p>
+    <% if @food.categories.any? %>
+      <ul>
+        <% @food.categories.each do |category| %>
+          <li><%= link_to category.name, category_path(category) %>
+, class: "badge badge-secondary" %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted">No categories assigned yet.</p>
+    <% end %>
+  </div>
+
+  <hr>
+
+  <%= form_with url: add_item_cart_path, method: :post, local: true do %>
+    <%= hidden_field_tag :food_id, @food.id %>
+
+    <div style="margin-bottom: 10px;">
+      <%= label_tag "quantity_#{@food.id}", "Quantity" %>
+      <%= number_field_tag :quantity, 1, min: 1, id: "quantity_#{@food.id}", style: "width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" %>
+    </div>
+
+    <%= submit_tag "Add to Cart", class: "btn btn-primary", style: "width: 100%;" %>
+  <% end %>
+
+  <div style="margin-top: 15px;">
+    <%= link_to "← Back to Foods", foods_path, class: "btn btn-secondary", style: "width: 100%;" %>
+  </div>
+</div>
+<h3>Reviews</h3>
+<% @food.reviews.each do |review| %>
+  <p>
+    <strong><%= review.user.email %>:</strong> <%= review.comment %> 
+    <% filled_stars = review.rating.to_i %>
+    <% empty_stars = 5 - filled_stars %>
+    <% filled_stars.times { %>★<% } %><% empty_stars.times { %>☆<% } %>
+  </p>
+<% end %>
+<h3>Write a Review</h3>
+
+<%= form_with(model: [@food, @review], local: true) do |f| %>
+  <div>
+    <%= f.label :rating, "Rating (1 to 5):" %><br>
+    <%= f.number_field :rating, in: 1..5 %>
+  </div>
+  <div>
+    <%= f.label :comment, "Comment:" %><br>
+    <%= f.text_area :comment %>
+  </div>
+  <%= f.submit "Submit Review" %>
+<% end %>
+
+<%= paginate @reviews %>
+
+
+
+
+
+<style>
+  .food-show-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    max-width: 600px;
+  }
+
+  .food-title {
+    font-size: 24px;
+    margin-top: 10px;
+    color: #333;
+  }
+
+  .food-image {
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+
+  ul {
+    padding-left: 20px;
+  }
+
+  .badge {
+    background-color: #6c757d;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .food-show-container {
+      padding: 15px;
+    }
+
+    .food-title {
+      font-size: 20px;
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
+</style>

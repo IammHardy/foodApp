@@ -1,0 +1,29 @@
+<h2>Users</h2>
+
+<%= search_form_for @q, url: admin_users_path, method: :get do |f| %>
+  <%= f.label :email_cont, "Search by Email" %>
+  <%= f.search_field :email_cont %>
+  <%= f.submit "Search" %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.email %></td>
+        <td><%= user.created_at.strftime("%b %d, %Y") %></td>
+        <td>
+          <%= link_to "View", admin_user_path(user) %>
+          <%= link_to "Delete", admin_user_path(user), method: :delete, data: { confirm: "Are you sure?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

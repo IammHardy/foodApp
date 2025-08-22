@@ -1,0 +1,61 @@
+<h1><%= @category.name %></h1>
+
+<% if @category.foods.any? %>
+  <div class="food-grid">
+    <% @category.foods.each do |food| %>
+      <div class="food-card">
+        <%= link_to food_path(food) do %>
+          <% if food.image.attached? %>
+            <%= image_tag url_for(food.image), width: 200, height: 150 %>
+          <% else %>
+            <p>No image</p>
+          <% end %>
+          <h3><%= food.name %></h3>
+        <% end %>
+
+        <p>Price: ₦<%= number_to_currency(food.price, unit: "", precision: 2) %></p>
+
+        <div style="margin-top: 10px;">
+          <%= link_to "View", food_path(food), class: "btn btn-sm btn-primary" %>
+          <%= link_to "Edit", edit_food_path(food), class: "btn btn-sm btn-warning" if current_user&.admin? %>
+          <%= link_to "Delete", food_path(food), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" if current_user&.admin? %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>No foods in this category yet.</p>
+<% end %>
+
+<%= link_to "← Back to All Categories", root_path, class: "btn btn-secondary", style: "margin-top: 20px;" %>
+
+<style>
+  .food-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .food-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    width: 220px;
+    border-radius: 8px;
+    background: white;
+    text-align: center;
+  }
+
+  .btn-sm {
+    padding: 6px 10px;
+    font-size: 13px;
+    margin: 3px;
+    display: inline-block;
+  }
+
+  @media (max-width: 600px) {
+    .food-card {
+      width: 100%;
+    }
+  }
+</style>

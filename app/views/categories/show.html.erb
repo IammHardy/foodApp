@@ -1,0 +1,19 @@
+<h1><%= @category.name %></h1>
+
+<% if @category.foods.any? %>
+  <ul>
+    <% @category.foods.each do |food| %>
+      <li>
+        <%= food.name %> 
+        <%= link_to "(Edit)", edit_food_path(food) %>
+        <%= link_to "(Delete)", food_path(food), method: :delete, data: { confirm: "Are you sure you want to delete this food?" } %>
+        <%= link_to "(View)", food_path(food) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No foods in this category yet.</p>
+<% end %>
+
+<%= link_to "← Back to All Categories", root_path %>
+

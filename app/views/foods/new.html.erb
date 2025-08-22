@@ -1,0 +1,24 @@
+<h1>Add a New Food</h1>
+
+<%= form_with model: @food, local: true do |form| %>
+  <div>
+    <%= form.label :name, "Food Name" %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <p>Select Categories:</p>
+    <% @categories.each do |category| %>
+      <div>
+        <%= check_box_tag "food[category_ids][]", category.id %>
+        <%= label_tag "food_category_ids_#{category.id}", category.name %>
+      </div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.submit "Create Food" %>
+  </div>
+<% end %>
+
+<p><%= link_to "Back to Categories", root_path %></p>

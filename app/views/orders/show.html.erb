@@ -1,0 +1,48 @@
+<h2>Order Summary</h2>
+
+<p><strong>Total:</strong> ₦<%= number_with_precision(@order.total_price || 0, precision: 0) %></p>
+
+<p><strong>Status:</strong> <%= @order.status.capitalize %></p>
+<p><strong>Name:</strong> 
+  <%= @order.name.present? ? @order.name : (@order.user&.email || "Name not provided") %>
+</p>
+<p><strong>Address:</strong> <%= @order.address %></p>
+<p><strong>Phone:</strong> <%= @order.phone %></p>
+
+
+
+
+<h3>Items:</h3>
+<% if @order.order_items.any? %>
+  <ul>
+    <% @order.order_items.each do |item| %>
+      <li>
+        <%= item.food.name %> - Quantity: <%= item.quantity %> - ₦<%= item.food.price * item.quantity %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No items found.</p>
+<% end %>
+
+
+
+<% if @order.pending? %>
+  <%= button_to "Proceed to Payment", paystack_checkout_path(order_id: @order.id), method: :post, data: { turbo: false }, class: "btn btn-success" %>
+<% elsif @order.processing? %>
+  <p><strong>Payment Verified!</strong> Your order is now being processed.</p>
+  <%= link_to "Message Admin", message_admin_order_path(@order), class: "btn btn-success", target: "_blank" %>
+  <%end%>
+<%= link_to 'Download Summary', download_order_summary_path(@order, reference: @order.payment_reference), class: 'btn' %>
+
+
+
+
+
+
+
+
+  
+
+
+

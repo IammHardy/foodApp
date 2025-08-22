@@ -1,0 +1,21 @@
+<h1>Place Your Order</h1>
+
+<% if @cart.cart_items.any? %>
+  <h2>Your Cart Items:</h2>
+  <ul>
+    <% @cart.cart_items.each do |item| %>
+      <li>
+        <%= item.food.name %> — Quantity: <%= item.quantity %> — Price: <%= number_to_currency(item.food.price * item.quantity) %>
+      </li>
+    <% end %>
+  </ul>
+
+  <p><strong>Total: </strong> <%= number_to_currency(calculate_total) %></p>
+
+  <%= form_with model: @order, url: orders_path do |form| %>
+    <%= form.submit "Confirm Order", class: "btn btn-primary" %>
+  <% end %>
+<% else %>
+  <p>Your cart is empty. Please add some foods first.</p>
+  <%= link_to "Go to Foods", foods_path %>
+<% end %>

@@ -1,0 +1,10 @@
+<h2>Your Cart</h2>
+<% if @cart_items.any? %>
+  <% @cart_items.each do |item| %>
+    <p><%= item.food.name %> - Qty: <%= item.quantity %> - ₦<%= item.food.price * item.quantity %></p>
+  <% end %>
+
+  <%= link_to "Proceed to Checkout", new_order_path, class: "btn btn-primary" %>
+<% else %>
+  <p>Your cart is empty</p>
+<% end %>

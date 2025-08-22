@@ -1,0 +1,75 @@
+<h1>My Orders</h1>
+<div style="margin-bottom: 20px;">
+  <%= link_to "← Back to Food", foods_path, class: "btn btn-secondary" %>
+</div>
+
+<% if @orders.any? %>
+  <% @orders.each do |order| %>
+    <div class="order-summary-card">
+      <p><strong>Order ID:</strong> <%= order.id %></p>
+
+      <p><strong>Status:</strong>
+        <span class="badge <%= order.status.downcase %>">
+          <%= order.status %>
+        </span>
+      </p>
+
+     <p><strong>Total:</strong> ₦<%= number_to_currency(order.order_items.sum { |i| i.food.price * i.quantity }, unit: "", precision: 2) %></p>
+
+      <p><strong>Placed At:</strong> <%= order.created_at.strftime("%B %d, %Y %H:%M") %></p>
+
+      <%= link_to "View Details", order_path(order), class: "btn btn-primary" %>
+    </div>
+  <% end %>
+<% else %>
+  <p>You haven't placed any orders yet.</p>
+<% end %>
+
+<style>
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .order-summary-card {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  .order-summary-card p {
+    margin-bottom: 10px;
+  }
+
+  .btn {
+    margin-top: 10px;
+    display: inline-block;
+  }
+
+  .badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+  }
+
+  .badge.pending { background-color: #ffc107; }
+  .badge.processing { background-color: #17a2b8; }
+  .badge.delivered { background-color: #28a745; }
+
+  @media (max-width: 600px) {
+    .btn {
+      width: 100%;
+      text-align: center;
+    }
+
+    .order-summary-card {
+      font-size: 14px;
+      padding: 12px;
+    }
+  }
+</style>

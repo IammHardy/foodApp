@@ -1,0 +1,13 @@
+<h1>Checkout</h1>
+
+<% @cart_items.each do |item| %>
+  <p><%= item.food.name %> - <%= item.quantity %> x ₦<%= item.food.price %></p>
+<% end %>
+
+<p><strong>Total: ₦<%= @grand_total %></strong></p>
+
+<%= form_with url: paystack_checkout_path, method: :post do %>
+  <%= hidden_field_tag :amount, @grand_total %>
+  <%= submit_tag "Proceed to Pay", class: "btn btn-primary" %>
+<% end %>
+

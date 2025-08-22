@@ -1,0 +1,25 @@
+<h1>Checkout</h1>
+
+<% @cart.cart_items.each do |item| %>
+  <p><%= item.food.name %> - <%= item.quantity %> x ₦<%= item.food.price %></p>
+<% end %>
+
+<p><strong>Total: ₦<%= @cart.cart_items.sum { |item| item.food.price * item.quantity } %></strong></p>
+
+<%= form_with model: @order, url: checkout_path, local: true do |form| %>
+  <div>
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+  </div>
+  <div>
+    <%= form.label :address %>
+    <%= form.text_area :address %>
+  </div>
+
+  <div>
+    <%= form.label :phone %>
+    <%= form.text_field :phone %>
+  </div>
+
+  <%= form.submit "Place Order" %>
+<% end %>

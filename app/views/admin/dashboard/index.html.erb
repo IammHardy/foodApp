@@ -1,0 +1,24 @@
+<h1>Admin Dashboard</h1>
+
+<h3>New Orders</h3>
+<% @unread_notifications.each do |note| %>
+  <p>
+    <%= link_to "Order ##{note.order.id}", admin_order_path(note.order) %>
+    - <%= time_ago_in_words(note.created_at) %> ago
+  </p>
+<% end %>
+
+<h2 class="text-xl font-bold mb-4">Daily Sales</h2>
+<%= line_chart @daily_sales, xtitle: "Date", ytitle: "Sales (₦)", suffix: "₦" %>
+<h2 class="text-xl font-bold mt-10 mb-4">Monthly Sales</h2>
+<%= column_chart @monthly_sales, xtitle: "Month", ytitle: "Revenue (₦)", suffix: "₦" %>
+
+
+<div class="dashboard-cards">
+  <div>Total Orders: <%= @total_orders %></div>
+  <div>Pending Orders: <%= @pending_orders %></div>
+  <div>Processing Orders: <%= @processing_orders %></div>
+  <div>Paid Orders: <%= @paid_orders %></div>
+  <div>Total Revenue: ₦<%= number_with_delimiter(@total_revenue, delimiter: ",") %></div>
+  <div>New Orders Today: <%= @new_orders_today %></div>
+</div>

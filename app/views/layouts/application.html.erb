@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Food App" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <%= javascript_include_tag "Chart.bundle" %>
+<%= javascript_include_tag "chartkick" %>
+
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background-color: #f8f9fa;
+      }
+
+      header, nav {
+        background-color: #343a40;
+        color: white;
+        padding: 10px 15px;
+        font-size: 14px;
+    
+      }
+
+      header a, nav a {
+        color: white;
+        text-decoration: none;
+        margin-right: 10px;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 600px;
+        margin: auto;
+        padding-bottom: 60px; /* space for floating cart */
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 10px 15px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-top: 5px;
+      }
+
+      .btn-success { background-color: #28a745; color: white; }
+      .btn-danger  { background-color: #dc3545; color: white; }
+      .btn-primary { background-color: #007bff; color: white; }
+      .btn-warning { background-color: #ffc107; color: black; }
+      .btn-secondary { background-color: #6c757d; color: white; }
+
+      .order-card {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        background: white;
+      }
+
+      form label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      form input[type="text"],
+      form input[type="email"],
+      form input[type="number"],
+      form textarea,
+      form select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .flash-notice, .flash-alert, .flash-info {
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        color: white;
+      }
+
+      .flash-notice { background-color: #28a745; }
+      .flash-alert  { background-color: #dc3545; }
+      .flash-info   { background-color: #17a2b8; }
+
+      .floating-cart-btn {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 12px 20px;
+        font-size: 14px;
+        z-index: 1000;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      }
+
+      @media (max-width: 600px) {
+        .order-card {
+          padding: 5px !important;
+          font-size: 14px;
+        }
+
+        .btn {
+          width: 100%;
+          margin-top: 10px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+   <%= link_to "Home", (current_user&.admin? ? admin_dashboard_path : root_path) %> |
+  <% if user_signed_in? %>
+    Logged in as <%= current_user.email %> |
+    
+    <% unless current_user.admin? %>
+      <%= link_to "My Orders", orders_path %> |
+    <% end %>
+
+    <%= button_to "Logout", destroy_user_session_path, method: :delete, form_class: "d-inline" %>
+  <% else %>
+    <%= link_to "Login", new_user_session_path %> |
+    <%= link_to "Sign up", new_user_registration_path %>
+  <% end %>
+
+  <% if current_user&.admin? %>
+    <nav>
+      <%= link_to "Manage Categories", admin_categories_path %> |
+      <%= link_to "Manage Foods", admin_foods_path %> |
+      <%= link_to "View Orders", admin_orders_path %>
+    </nav>
+  <% end %>
+
+  <% unless current_user&.admin? %>
+    <% if current_cart.present? %>
+      <%= link_to "Cart (#{current_cart.cart_items.sum(:quantity)})", cart_path %>
+    <% end %>
+  <% end %>
+</header>
+
+</header>
+
+<% unless current_user&.admin? %>
+  <% if current_cart.present? && current_cart.cart_items.any? %>
+    <%= link_to "View Cart (#{current_cart.cart_items.sum(:quantity)})", cart_path, class: "floating-cart-btn" %>
+  <% end %>
+<% end %>
+
+
+
+    <% flash.each do |type, message| %>
+      <% css_class = case type.to_sym
+           when :notice then "flash-notice"
+           when :alert then "flash-alert"
+           else "flash-info"
+         end %>
+      <div class="<%= css_class %>">
+        <%= message %>
+      </div>
+    <% end %>
+
+    <div class="container">
+      <%= yield %>
+    </div>
+
+    <% if user_signed_in? && session[:cart].present? %>
+      <%= link_to "View Cart (#{session[:cart].values.sum})", cart_path, class: "floating-cart-btn" %>
+    <% end %>
+  </body>
+</html>

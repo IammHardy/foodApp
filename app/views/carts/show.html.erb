@@ -1,0 +1,97 @@
+<div class="cart-container">
+  <h1>Your Cart</h1>
+
+  <% if @cart_items.any? %>
+    <ul class="cart-list">
+      <% @cart_items.each do |item| %>
+  <li class="cart-item">
+    <div class="item-info">
+      <strong><%= item.food.name %></strong><br>
+      Quantity: <%= item.quantity %><br>
+      Unit Price: ₦<%= number_to_currency(item.food.price, unit: "", precision: 2) %><br>
+      Total: ₦<%= number_to_currency(item.food.price * item.quantity, unit: "", precision: 2) %>
+    </div>
+
+    <div class="remove-btn">
+      <%= button_to "Remove", remove_item_cart_path(item.food.id), method: :delete, data: { confirm: "Remove item?" }, class: "btn btn-sm btn-danger" %>
+    </div>
+  </li>
+<% end %>
+
+    </ul>
+
+    <div class="cart-total">
+      <h3>Grand Total: ₦<%= number_to_currency(@grand_total, unit: "", precision: 2) %></h3>
+    </div>
+
+    <div class="cart-actions">
+      <%= link_to "← Back to Foods", foods_path, class: "btn btn-secondary" %>
+      <%= link_to "Proceed to Checkout", checkout_path, class: "btn btn-primary" %>
+
+    </div>
+  <% else %>
+    <p>Your cart is empty.</p>
+    <%= link_to "Browse Foods", foods_path, class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<style>
+  .cart-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+
+  .cart-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+
+  .cart-item {
+    border-bottom: 1px solid #ccc;
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .item-info {
+    flex: 1;
+  }
+
+  .cart-total {
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .cart-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .cart-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cart-actions {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+    }
+
+    .cart-total {
+      text-align: left;
+    }
+  }
+</style>

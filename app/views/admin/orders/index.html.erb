@@ -1,0 +1,47 @@
+<h1>Admin Dashboard</h1>
+
+<div style="margin-bottom: 20px;">
+  <p><strong>Total Orders:</strong> <%= @total_orders %></p>
+  <p><strong>Pending Orders:</strong> <%= @pending_orders %></p>
+  <p><strong>Paid Orders:</strong> <%= @paid_orders %></p>
+  <p><strong>Total Revenue:</strong> ₦<%= number_to_currency(@total_revenue, unit: "", precision: 2) %></p>
+  <p><strong>New Orders Today:</strong> <%= @new_orders_today %></p>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Total</th>
+      <th>Ordered At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.name %></td>
+        <td>
+          <% case order.status.downcase %>
+          <% when "pending" %>
+            <span style="color: orange; font-weight: bold;">Pending</span>
+          <% when "processing" %>
+            <span style="color: green; font-weight: bold;">Paid</span>
+          <% else %>
+            <%= order.status.capitalize %>
+          <% end %>
+        </td>
+        <td>₦<%= number_to_currency(order.total_price, unit: "", precision: 2) %></td>
+        <td><%= order.created_at.strftime("%b %d, %Y %I:%M %p") %></td>
+        <td><%= link_to "View", admin_order_path(order), class: "btn btn-primary btn-sm" %></td>
+      </tr>
+    <% end %>
+    <div class="pagination">
+  <%= paginate @orders %>
+</div>
+
+  </tbody>
+</table>

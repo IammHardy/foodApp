@@ -1,0 +1,38 @@
+<%= link_to "➕ Add Category", new_category_path %> |
+<%= link_to "➕ Add Food", new_food_path %>
+<%= form_with url: categories_path, method: :get, local: true do |form| %>
+  <%= form.label :search, "Search Categories or Foods" %>
+  <%= form.text_field :search, value: params[:search], placeholder: "Type to search..." %>
+  <%= form.submit "Search" %>
+<% end %>
+<% if params[:search].present? %>
+  <%= link_to "Clear Search", categories_path %>
+<% end %>
+
+
+
+<h1>FOOD Categories</h1>
+
+<% @categories.each do |category| %>
+  <h2><%= link_to category.name, category_path(category) %></h2>
+   
+  <% if category.foods.any? %>
+    <ul>
+      <% category.foods.each do |food| %>
+        <li>
+          <%= food.name %> 
+          <%= link_to "(Edit)", edit_food_path(food) %>
+         <%= link_to "(Delete)", food_path(food, category_id: category.id), method: :delete, data: { confirm: "Are you sure?" } %>
+
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No foods available in this category.</p>
+  <% end %>
+<% end %>
+ <% if @categories.empty? && params[:search].present? %>
+  <p>No categories or foods found matching "<%= params[:search] %>".</p>
+<% end %>
+
+<%= link_to "← Back to Home", categories_path %>
