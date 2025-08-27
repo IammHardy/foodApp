@@ -1,24 +1,40 @@
-<h1>Add a New Food</h1>
+<div class="max-w-3xl mx-auto px-4 py-12">
 
-<%= form_with model: @food, local: true do |form| %>
-  <div>
-    <%= form.label :name, "Food Name" %><br>
-    <%= form.text_field :name %>
-  </div>
+  <h1 class="text-3xl font-bold text-red-600 mb-8 text-center">Add a New Food</h1>
 
-  <div>
-    <p>Select Categories:</p>
-    <% @categories.each do |category| %>
+  <div class="bg-white rounded-2xl shadow-lg p-8">
+    <%= form_with model: @food, local: true, class: "space-y-6" do |form| %>
+
+      <!-- Food Name -->
       <div>
-        <%= check_box_tag "food[category_ids][]", category.id %>
-        <%= label_tag "food_category_ids_#{category.id}", category.name %>
+        <%= form.label :name, "Food Name", class: "block font-semibold mb-2" %>
+        <%= form.text_field :name, class: "w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
       </div>
+
+      <!-- Categories -->
+      <div>
+        <p class="font-semibold mb-2">Select Categories:</p>
+        <div class="flex flex-wrap gap-4">
+          <% @categories.each do |category| %>
+            <label class="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-full cursor-pointer hover:bg-gray-200 transition">
+              <%= check_box_tag "food[category_ids][]", category.id, @food.category_ids.include?(category.id), class: "h-4 w-4 text-red-600 focus:ring-red-500" %>
+              <span class="text-gray-700 font-medium"><%= category.name %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div>
+        <%= form.submit "Create Food", class: "bg-red-600 text-white px-6 py-2 rounded-full font-bold hover:bg-red-500 transition w-full" %>
+      </div>
+
     <% end %>
+
+    <!-- Back Link -->
+    <div class="mt-6 text-center">
+      <%= link_to "← Back to Categories", root_path, class: "text-red-600 hover:underline font-semibold" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.submit "Create Food" %>
-  </div>
-<% end %>
-
-<p><%= link_to "Back to Categories", root_path %></p>
+</div>

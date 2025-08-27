@@ -44,8 +44,8 @@ gem 'ransack'
 gem 'kaminari'
 
 #revenue chart gem
-gem "chartkick"
-gem "groupdate"
+# gem "chartkick"
+ gem "groupdate"
 
 #prum
 gem 'prawn'
@@ -91,5 +91,9 @@ gem "paystackapi", "~> 0.1.0"
 gem 'httparty'
 
 gem "tailwindcss-rails"
+gem 'image_processing', '~> 1.12'
+gem "mini_magick"
+gem 'friendly_id', '~> 5.4.0'
+
 
 

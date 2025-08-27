@@ -1,29 +1,39 @@
-<h2>Users</h2>
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow">
+  <h1 class="text-3xl font-bold text-red-600 mb-6">Users</h1>
 
-<%= search_form_for @q, url: admin_users_path, method: :get do |f| %>
-  <%= f.label :email_cont, "Search by Email" %>
-  <%= f.search_field :email_cont %>
-  <%= f.submit "Search" %>
-<% end %>
-
-<table>
-  <thead>
-    <tr>
-      <th>Email</th>
-      <th>Created At</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.email %></td>
-        <td><%= user.created_at.strftime("%b %d, %Y") %></td>
-        <td>
-          <%= link_to "View", admin_user_path(user) %>
-          <%= link_to "Delete", admin_user_path(user), method: :delete, data: { confirm: "Are you sure?" } %>
-        </td>
-      </tr>
+  <div class="mb-6">
+    <%= search_form_for @q, url: admin_users_path, method: :get, html: { class: "flex flex-wrap gap-2" } do |f| %>
+      <%= f.label :email_cont, "Search by Email", class: "sr-only" %>
+      <%= f.search_field :email_cont, placeholder: "Enter user email", class: "border rounded px-3 py-2 w-full sm:w-64" %>
+      <%= f.submit "Search", class: "bg-red-600 hover:bg-red-500 text-white font-semibold px-4 py-2 rounded transition" %>
     <% end %>
-  </tbody>
-</table>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Email</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Created At</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @users.each do |user| %>
+          <tr>
+            <td class="px-4 py-2"><%= user.email %></td>
+            <td class="px-4 py-2"><%= user.created_at.strftime("%b %d, %Y") %></td>
+            <td class="px-4 py-2 flex gap-2">
+              <%= link_to "View", admin_user_path(user), class: "bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded transition" %>
+              <%= link_to "Delete", admin_user_path(user), method: :delete, data: { confirm: "Are you sure?" }, class: "bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded transition" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-6">
+   <%= paginate @users %>
+  </div>
+</div>

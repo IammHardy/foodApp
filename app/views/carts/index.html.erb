@@ -1,10 +1,31 @@
-<h2>Your Cart</h2>
-<% if @cart_items.any? %>
-  <% @cart_items.each do |item| %>
-    <p><%= item.food.name %> - Qty: <%= item.quantity %> - ₦<%= item.food.price * item.quantity %></p>
-  <% end %>
+<main class="bg-gray-50 min-h-screen px-6 py-12">
 
-  <%= link_to "Proceed to Checkout", new_order_path, class: "btn btn-primary" %>
-<% else %>
-  <p>Your cart is empty</p>
-<% end %>
+  <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+    <h2 class="text-3xl font-bold text-red-600 mb-6 text-center">Your Cart</h2>
+
+    <% if @cart_items.any? %>
+      <div class="space-y-4 mb-6">
+        <% @cart_items.each do |item| %>
+          <div class="flex justify-between items-center p-4 bg-red-50 rounded-lg shadow-sm">
+            <div>
+              <h3 class="font-semibold text-red-600"><%= item.food.name %></h3>
+              <p class="text-gray-700">Quantity: <%= item.quantity %></p>
+            </div>
+            <p class="font-bold">₦<%= number_to_currency(item.food.price * item.quantity, unit: "", precision: 0) %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="text-center">
+        <%= link_to "Proceed to Checkout", new_order_path, class: "bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-500 transition font-semibold" %>
+      </div>
+    <% else %>
+      <p class="text-gray-500 text-center">Your cart is empty.</p>
+      <div class="mt-6 text-center">
+        <%= link_to "Back to Menu", foods_path, class: "text-red-600 hover:underline font-semibold" %>
+      </div>
+    <% end %>
+
+  </div>
+
+</main>

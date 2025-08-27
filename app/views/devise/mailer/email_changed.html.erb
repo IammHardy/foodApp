@@ -1,7 +1,42 @@
-<p>Hello <%= @email %>!</p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Email Changed - SAJUMA RESTAURANT</title>
+  </head>
+  <body style="background-color: #FDFDFD; font-family: Arial, sans-serif; margin:0; padding:0;">
 
-<% if @resource.try(:unconfirmed_email?) %>
-  <p>We're contacting you to notify you that your email is being changed to <%= @resource.unconfirmed_email %>.</p>
-<% else %>
-  <p>We're contacting you to notify you that your email has been changed to <%= @resource.email %>.</p>
-<% end %>
+    <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+      <!-- Header -->
+      <div style="background-color: #FF3B30; color: white; padding: 20px; text-align: center;">
+        <h2 style="margin: 0; font-size: 24px;">Your Email Has Been Updated</h2>
+      </div>
+
+      <!-- Body -->
+      <div style="padding: 30px; color: #333;">
+        <p style="font-size: 16px;">Hello <strong><%= @email %></strong>!</p>
+
+        <% if @resource.try(:unconfirmed_email?) %>
+          <p style="font-size: 16px; line-height: 1.5;">
+            We're contacting you to notify you that your email is being changed to <strong><%= @resource.unconfirmed_email %></strong>.
+          </p>
+        <% else %>
+          <p style="font-size: 16px; line-height: 1.5;">
+            We're contacting you to notify you that your email has been changed to <strong><%= @resource.email %></strong>.
+          </p>
+        <% end %>
+
+        <p style="font-size: 14px; color: #555; margin-top: 20px;">
+          If you did not request this change, please contact our support team immediately.
+        </p>
+
+        <p style="margin-top: 30px; font-size: 14px; color: #555;">
+          — The SAJUMA Team
+        </p>
+      </div>
+
+    </div>
+
+  </body>
+</html>

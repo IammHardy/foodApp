@@ -1,16 +1,16 @@
 <%= form_with model: [:admin, category], local: true do |form| %>
-  <div class="form-group">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "form-control" %>
+  <div class="mb-4">
+    <%= form.label :name, class: "block text-gray-700 font-semibold mb-2" %>
+    <%= form.text_field :name, class: "w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-red-600" %>
   </div>
 
-  <div class="form-group">
-    <%= form.label :parent_id, "Parent Category (optional)" %>
-    <%= form.collection_select :parent_id, Category.where(parent_id: nil).where.not(id: category.id), :id, :name, { include_blank: "None" }, class: "form-control" %>
+  <div class="mb-4">
+    <%= form.label :parent_id, "Parent Category (optional)", class: "block text-gray-700 font-semibold mb-2" %>
+    <%= form.collection_select :parent_id, Category.where(parent_id: nil).where.not(id: category.id), :id, :name, { include_blank: "None" }, class: "w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-red-600" %>
   </div>
 
-  <div class="form-actions">
-    <%= form.submit category.persisted? ? "Update Category" : "Create Category", class: "btn btn-primary" %>
-    <%= link_to "Cancel", admin_categories_path, class: "btn btn-secondary" %>
+  <div class="flex space-x-2">
+    <%= form.submit category.persisted? ? "Update Category" : "Create Category", class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 transition" %>
+    <%= link_to "Cancel", admin_categories_path, class: "bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition" %>
   </div>
 <% end %>

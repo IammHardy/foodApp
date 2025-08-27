@@ -1,3 +1,9 @@
-<h1>Edit Food</h1>
-<%= render 'form', food: @food %>
-<%= link_to 'Back', admin_foods_path %>
+<div class="max-w-2xl mx-auto mt-8">
+  <h1 class="text-2xl font-bold text-red-600 mb-6">Edit Food</h1>
+
+  <%= render 'form', food: @food %>
+
+  <div class="mt-4">
+    <%= link_to '← Back to Foods', admin_foods_path, class: "text-red-600 hover:underline" %>
+  </div>
+</div>

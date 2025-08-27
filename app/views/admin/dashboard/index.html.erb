@@ -1,24 +1,75 @@
-<h1>Admin Dashboard</h1>
+<!-- app/views/admin/dashboard/index.html.erb -->
 
-<h3>New Orders</h3>
-<% @unread_notifications.each do |note| %>
-  <p>
-    <%= link_to "Order ##{note.order.id}", admin_order_path(note.order) %>
-    - <%= time_ago_in_words(note.created_at) %> ago
-  </p>
-<% end %>
+<div class="max-w-7xl mx-auto p-6" data-controller="dashboard">
+  <h1 class="text-3xl font-bold text-red-600 mb-6">Admin Dashboard</h1>
 
-<h2 class="text-xl font-bold mb-4">Daily Sales</h2>
-<%= line_chart @daily_sales, xtitle: "Date", ytitle: "Sales (₦)", suffix: "₦" %>
-<h2 class="text-xl font-bold mt-10 mb-4">Monthly Sales</h2>
-<%= column_chart @monthly_sales, xtitle: "Month", ytitle: "Revenue (₦)", suffix: "₦" %>
+  <!-- New Orders -->
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">New Orders</h2>
+    <% if @unread_notifications.any? %>
+      <ul class="space-y-2">
+        <% @unread_notifications.each do |note| %>
+          <li class="bg-white p-4 rounded shadow flex justify-between items-center hover:bg-gray-50 transition">
+            <%= link_to "Order ##{note.order.id}", admin_order_path(note.order), class: "font-semibold text-red-600 hover:underline" %>
+            <span class="text-gray-500 text-sm"><%= time_ago_in_words(note.created_at) %> ago</span>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-gray-500">No new orders.</p>
+    <% end %>
+  </div>
+
+  <!-- Dashboard Stats Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+    <div class="bg-red-600 text-white p-4 rounded shadow">
+      <p class="text-sm font-semibold">Total Orders</p>
+      <p class="text-2xl font-bold"><%= @total_orders %></p>
+    </div>
+    <div class="bg-yellow-500 text-white p-4 rounded shadow">
+      <p class="text-sm font-semibold">Pending Orders</p>
+      <p class="text-2xl font-bold"><%= @pending_orders %></p>
+    </div>
+    <div class="bg-blue-600 text-white p-4 rounded shadow">
+      <p class="text-sm font-semibold">Processing Orders</p>
+      <p class="text-2xl font-bold"><%= @paid_orders %></p>
+    </div>
+    <div class="bg-green-600 text-white p-4 rounded shadow">
+      <p class="text-sm font-semibold">Paid Orders</p>
+      <p class="text-2xl font-bold"><%= @paid_orders %></p>
+    </div>
+    <div class="bg-purple-600 text-white p-4 rounded shadow">
+      <p class="text-sm font-semibold">Total Revenue</p>
+      <p class="text-2xl font-bold">₦<%= number_with_delimiter(@total_revenue, delimiter: ",") %></p>
+    </div>
+    <div class="bg-indigo-500 text-white p-4 rounded shadow">
+      <p class="text-sm font-semibold">New Orders Today</p>
+      <p class="text-2xl font-bold"><%= @new_orders_today %></p>
+    </div>
+  </div>
+
+  <!-- Daily Sales -->
+  <div class="mb-10">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Daily Sales</h2>
+    <div class="bg-white p-4 rounded shadow">
+<h2>Daily Sales</h2>
+<canvas id="daily-sales-chart" width="400" height="200"></canvas>
+
+<h2>Monthly Sales</h2>
+<canvas id="monthly-sales-chart" width="400" height="200"></canvas>
 
 
-<div class="dashboard-cards">
-  <div>Total Orders: <%= @total_orders %></div>
-  <div>Pending Orders: <%= @pending_orders %></div>
-  <div>Processing Orders: <%= @processing_orders %></div>
-  <div>Paid Orders: <%= @paid_orders %></div>
-  <div>Total Revenue: ₦<%= number_with_delimiter(@total_revenue, delimiter: ",") %></div>
-  <div>New Orders Today: <%= @new_orders_today %></div>
+
+  </div>
+
+  <!-- Monthly Sales -->
+  <div>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Monthly Sales</h2>
+    <div class="bg-white p-4 rounded shadow">
+      <canvas data-dashboard-target="monthlyChart" 
+        data-sales="<%= @monthly_sales.to_json %>" 
+        height="300"></canvas>
+
+    </div>
+  </div>
 </div>

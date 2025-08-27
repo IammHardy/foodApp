@@ -1,13 +1,41 @@
-<h2>Welcome to FoodApp, <%= @resource.email %>!</h2>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Confirm Your SAJUMA Account</title>
+  </head>
+  <body style="background-color: #FDFDFD; font-family: Arial, sans-serif; margin:0; padding:0;">
 
-<p>To activate your account, please click the button below:</p>
+    <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      
+      <!-- Header -->
+      <div style="background-color: #FF3B30; color: white; padding: 20px; text-align: center;">
+        <h2 style="margin: 0; font-size: 24px;">Welcome to SAJUMA RESTAURANT, <%= @resource.email %>!</h2>
+      </div>
 
-<p>
-  <a href="<%= confirmation_url(@resource, confirmation_token: @token) %>" style="padding: 10px 15px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">
-    Confirm My Account
-  </a>
-</p>
+      <!-- Body -->
+      <div style="padding: 30px; color: #333;">
+        <p style="font-size: 16px; line-height: 1.5;">
+          To activate your account, please click the button below:
+        </p>
 
-<p>If you didn’t create an account, you can ignore this email.</p>
+        <p style="text-align: center; margin: 30px 0;">
+          <a href="<%= confirmation_url(@resource, confirmation_token: @token) %>" 
+             style="background-color: #FFCC00; color: #FF3B30; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 16px;">
+            Confirm My Account
+          </a>
+        </p>
 
-<p>— The FoodApp Team</p>
+        <p style="font-size: 14px; color: #555;">
+          If you didn’t create an account, you can safely ignore this email.
+        </p>
+
+        <p style="margin-top: 20px; font-size: 14px; color: #555;">
+          — The SAJUMA Team
+        </p>
+      </div>
+
+    </div>
+
+  </body>
+</html>

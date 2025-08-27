@@ -3,190 +3,181 @@
   <head>
     <title><%= content_for(:title) || "Food App" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <%= javascript_include_tag "Chart.bundle" %>
-<%= javascript_include_tag "chartkick" %>
 
 
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: sans-serif;
-        background-color: #f8f9fa;
-      }
-
-      header, nav {
-        background-color: #343a40;
-        color: white;
-        padding: 10px 15px;
-        font-size: 14px;
-    
-      }
-
-      header a, nav a {
-        color: white;
-        text-decoration: none;
-        margin-right: 10px;
-      }
-
-      .container {
-        width: 90%;
-        max-width: 600px;
-        margin: auto;
-        padding-bottom: 60px; /* space for floating cart */
-      }
-
-      .btn {
-        display: inline-block;
-        padding: 10px 15px;
-        font-size: 14px;
-        border: none;
-        border-radius: 5px;
-        text-decoration: none;
-        margin-top: 5px;
-      }
-
-      .btn-success { background-color: #28a745; color: white; }
-      .btn-danger  { background-color: #dc3545; color: white; }
-      .btn-primary { background-color: #007bff; color: white; }
-      .btn-warning { background-color: #ffc107; color: black; }
-      .btn-secondary { background-color: #6c757d; color: white; }
-
-      .order-card {
-        border: 1px solid #ccc;
-        padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        background: white;
-      }
-
-      form label {
-        display: block;
-        margin-bottom: 5px;
-      }
-
-      form input[type="text"],
-      form input[type="email"],
-      form input[type="number"],
-      form textarea,
-      form select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-
-      .flash-notice, .flash-alert, .flash-info {
-        padding: 10px;
-        text-align: center;
-        font-weight: bold;
-        color: white;
-      }
-
-      .flash-notice { background-color: #28a745; }
-      .flash-alert  { background-color: #dc3545; }
-      .flash-info   { background-color: #17a2b8; }
-
-      .floating-cart-btn {
-        position: fixed;
-        bottom: 15px;
-        right: 15px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 50px;
-        padding: 12px 20px;
-        font-size: 14px;
-        z-index: 1000;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      }
-
-      @media (max-width: 600px) {
-        .order-card {
-          padding: 5px !important;
-          font-size: 14px;
-        }
-
-        .btn {
-          width: 100%;
-          margin-top: 10px;
-          text-align: center;
-        }
-      }
-    </style>
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   </head>
-  <body>
-    <header>
-   <%= link_to "Home", (current_user&.admin? ? admin_dashboard_path : root_path) %> |
-  <% if user_signed_in? %>
-    Logged in as <%= current_user.email %> |
+
+  <body class="bg-gray-50 text-gray-800 font-sans">
+  <!-- HEADER -->
+<header class="bg-red-600 text-white shadow sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto flex items-center justify-between px-4 h-20 relative">
     
-    <% unless current_user.admin? %>
-      <%= link_to "My Orders", orders_path %> |
+    <!-- Logo -->
+    <%= link_to root_path, class: "text-3xl font-extrabold tracking-wide text-white" do %>
+      Sajuma
     <% end %>
 
-    <%= button_to "Logout", destroy_user_session_path, method: :delete, form_class: "d-inline" %>
-  <% else %>
-    <%= link_to "Login", new_user_session_path %> |
-    <%= link_to "Sign up", new_user_registration_path %>
-  <% end %>
+    <!-- Desktop Menu -->
+    <nav class="hidden lg:flex gap-6 items-center">
+      <%= link_to "Home", (current_user&.admin? ? admin_dashboard_path : root_path),
+          class: "hover:text-yellow-400 font-medium" %>
+      <%= link_to "Browse Menu", foods_path, class: "hover:text-yellow-400 font-bold" %>
 
-  <% if current_user&.admin? %>
-    <nav>
-      <%= link_to "Manage Categories", admin_categories_path %> |
-      <%= link_to "Manage Foods", admin_foods_path %> |
-      <%= link_to "View Orders", admin_orders_path %>
+      <% if user_signed_in? %>
+        <% unless current_user.admin? %>
+          <%= link_to "My Orders", orders_path, class: "hover:text-yellow-400 font-medium" %>
+        <% end %>
+        <%= button_to "Logout", destroy_user_session_path, method: :delete,
+              form_class: "inline",
+              class: "hover:text-yellow-400 font-medium" %>
+      <% else %>
+        <%= link_to "Login", new_user_session_path, class: "hover:text-yellow-400 font-medium" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "hover:text-yellow-400 font-medium" %>
+      <% end %>
+
+      <% if current_cart.present? && current_cart.cart_items.any? %>
+        <%= link_to cart_path, class: "relative hover:text-yellow-300" do %>
+          <i class="fas fa-shopping-cart text-lg"></i>
+          <span class="absolute -top-2 -right-3 bg-white text-red-600 text-xs font-bold rounded-full px-2 py-0.5">
+            <%= current_cart.cart_items.sum(:quantity) %>
+          </span>
+        <% end %>
+      <% end %>
     </nav>
-  <% end %>
 
-  <% unless current_user&.admin? %>
-    <% if current_cart.present? %>
-      <%= link_to "Cart (#{current_cart.cart_items.sum(:quantity)})", cart_path %>
-    <% end %>
-  <% end %>
+    <!-- Hamburger (mobile only) -->
+    <button id="hamburger-btn" class="lg:hidden text-white text-2xl relative z-50">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Mobile Menu -->
+   <nav id="mobile-nav" class="hidden absolute top-full right-0 left-0 bg-white shadow-lg z-60 flex flex-col gap-1 p-4 rounded-b-md transition-all duration-300 transform -translate-y-5 opacity-0">
+      <%= link_to "Home", (current_user&.admin? ? admin_dashboard_path : root_path),
+          class: "block px-4 py-2 text-red-600 hover:bg-red-100 hover:text-yellow-400 font-medium rounded" %>
+
+      <% if user_signed_in? %>
+        <span class="block px-4 py-2 text-gray-500 text-sm">
+          Logged in as <%= current_user.email %>
+        </span>
+
+        <% unless current_user.admin? %>
+          <%= link_to "My Orders", orders_path,
+              class: "block px-4 py-2 text-red-600 hover:bg-red-100 hover:text-yellow-400 font-medium rounded" %>
+        <% end %>
+
+        <%= button_to "Logout", destroy_user_session_path, method: :delete,
+              form_class: "inline",
+              class: "block px-4 py-2 text-red-600 hover:bg-red-100 hover:text-yellow-400 font-medium rounded" %>
+      <% else %>
+        <%= link_to "Login", new_user_session_path,
+              class: "block px-4 py-2 text-red-600 hover:bg-red-100 hover:text-yellow-400 font-medium rounded" %>
+        <%= link_to "Sign Up", new_user_registration_path,
+              class: "block px-4 py-2 text-red-600 hover:bg-red-100 hover:text-yellow-400 font-medium rounded" %>
+      <% end %>
+
+      <%= link_to "Browse Menu", foods_path,
+            class: "block px-4 py-2 text-red-600 hover:bg-red-100 hover:text-yellow-400 font-bold rounded" %>
+
+      <% if current_cart.present? && current_cart.cart_items.any? %>
+        <%= link_to cart_path, class: "relative block px-4 py-2 text-yellow-400 hover:text-yellow-300" do %>
+          <i class="fas fa-shopping-cart text-lg"></i>
+          <span class="absolute -top-2 -right-3 bg-white text-red-600 text-xs font-bold rounded-full px-2 py-0.5">
+            <%= current_cart.cart_items.sum(:quantity) %>
+          </span>
+        <% end %>
+      <% end %>
+    </nav>
+
+  </div>
 </header>
 
-</header>
+<script>
+  const btn = document.getElementById('hamburger-btn');
+  const nav = document.getElementById('mobile-nav');
 
-<% unless current_user&.admin? %>
-  <% if current_cart.present? && current_cart.cart_items.any? %>
-    <%= link_to "View Cart (#{current_cart.cart_items.sum(:quantity)})", cart_path, class: "floating-cart-btn" %>
-  <% end %>
-<% end %>
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent document click
+    const icon = btn.querySelector('i');
+    nav.classList.toggle('hidden');
+    if (!nav.classList.contains('hidden')) {
+      nav.classList.remove('-translate-y-5', 'opacity-0');
+      nav.classList.add('translate-y-0', 'opacity-100');
+      icon.classList.remove('fa-bars');
+      icon.classList.add('fa-times');
+    } else {
+      nav.classList.add('-translate-y-5', 'opacity-0');
+      nav.classList.remove('translate-y-0', 'opacity-100');
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!btn.contains(e.target) && !nav.contains(e.target)) {
+      if (!nav.classList.contains('hidden')) {
+        nav.classList.add('-translate-y-5', 'opacity-0');
+        nav.classList.remove('translate-y-0', 'opacity-100');
+        setTimeout(() => nav.classList.add('hidden'), 300);
+        btn.querySelector('i').classList.remove('fa-times');
+        btn.querySelector('i').classList.add('fa-bars');
+      }
+    }
+  });
+</script>
 
 
-
-    <% flash.each do |type, message| %>
-      <% css_class = case type.to_sym
-           when :notice then "flash-notice"
-           when :alert then "flash-alert"
-           else "flash-info"
-         end %>
-      <div class="<%= css_class %>">
-        <%= message %>
-      </div>
-    <% end %>
-
-    <div class="container">
-      <%= yield %>
+    <!-- FLASH -->
+    <div id="flash-container" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 space-y-2">
+      <% flash.each do |type, message| %>
+        <% css_class = case type.to_sym
+                      when :notice then "bg-green-500"
+                      when :alert then "bg-red-500"
+                      else "bg-blue-500"
+                      end %>
+        <div class="p-4 rounded-md text-center font-bold text-white shadow-lg animate-fade-in-out">
+          <%= message %>
+        </div>
+      <% end %>
     </div>
 
-    <% if user_signed_in? && session[:cart].present? %>
-      <%= link_to "View Cart (#{session[:cart].values.sum})", cart_path, class: "floating-cart-btn" %>
-    <% end %>
+    <!-- MAIN CONTENT -->
+    <%= yield %>
+
+    <!-- FLASH SCRIPT -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const flashContainer = document.getElementById("flash-container");
+        if (flashContainer) {
+          setTimeout(() => {
+            flashContainer.style.transition = "opacity 0.5s";
+            flashContainer.style.opacity = "0";
+            setTimeout(() => flashContainer.remove(), 500);
+          }, 4000);
+        }
+      });
+    </script>
+
+    <style>
+      @keyframes fade-in-out {
+        0% { opacity: 0; transform: translateY(-10px); }
+        10% { opacity: 1; transform: translateY(0); }
+        90% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(-10px); }
+      }
+      .animate-fade-in-out {
+        animation: fade-in-out 4s ease forwards;
+      }
+    </style>
+   
   </body>
 </html>

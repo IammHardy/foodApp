@@ -1,103 +1,23 @@
-<h1 class="page-title">Manage Foods</h1>
+<div class="max-w-4xl mx-auto mt-8">
+  <h1 class="text-2xl font-bold text-red-600 mb-6">Manage Foods</h1>
 
-<div class="top-actions">
-  <%= link_to "➕ Add Food", new_admin_food_path, class: "btn btn-primary" %>
-</div>
-
-<% if @foods.any? %>
-  <div class="admin-food-list">
-    <% @foods.each do |food| %>
-      <div class="admin-food-card">
-        <div class="food-name"><strong><%= food.name %></strong></div>
-        <div class="food-actions">
-          <%= link_to "Edit", edit_admin_food_path(food), class: "btn btn-secondary btn-sm" %>
-          <%= link_to "Delete", admin_food_path(food), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
-        </div>
-      </div>
-    <% end %>
+  <div class="mb-6">
+    <%= link_to "➕ Add Food", new_admin_food_path, class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 transition" %>
   </div>
-<% else %>
-  <p>No foods available yet.</p>
-<% end %>
 
-<style>
-  .page-title {
-    font-size: 22px;
-    margin-bottom: 20px;
-  }
-
-  .top-actions {
-    margin-bottom: 15px;
-  }
-
-  .admin-food-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .admin-food-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-
-  .food-actions .btn {
-    margin-left: 5px;
-  }
-
-  .btn {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 14px;
-    display: inline-block;
-    cursor: pointer;
-  }
-
-  .btn-primary {
-    background-color: #007bff;
-    color: white;
-  }
-
-  .btn-secondary {
-    background-color: #6c757d;
-    color: white;
-  }
-
-  .btn-danger {
-    background-color: #dc3545;
-    color: white;
-  }
-
-  .btn-sm {
-    padding: 6px 10px;
-    font-size: 13px;
-  }
-
-  @media (max-width: 600px) {
-    .admin-food-card {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .food-actions {
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      width: 100%;
-    }
-
-    .food-actions .btn {
-      width: 100%;
-      text-align: center;
-    }
-  }
-</style>
+  <% if @foods.any? %>
+    <div class="flex flex-col gap-4">
+      <% @foods.each do |food| %>
+        <div class="flex justify-between items-center bg-white p-4 rounded shadow border border-gray-100">
+          <div class="font-semibold"><%= food.name %></div>
+          <div class="flex gap-2">
+            <%= link_to "Edit", edit_admin_food_path(food), class: "bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-500 transition text-sm" %>
+            <%= link_to "Delete", admin_food_path(food), method: :delete, data: { confirm: "Are you sure?" }, class: "bg-red-600 text-white px-3 py-1 rounded hover:bg-red-500 transition text-sm" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-gray-500">No foods available yet.</p>
+  <% end %>
+</div>

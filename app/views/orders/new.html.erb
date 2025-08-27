@@ -1,71 +1,28 @@
-<div class="checkout-container">
-  <h1>Checkout</h1>
+<div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md">
+  <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Checkout</h1>
 
- <%= form_with model: @order do |f| %>
-  <%= f.label :name %>
-  <%= f.text_field :name %>
+  <%= form_with model: @order, local: true do |f| %>
+    <div class="mb-4">
+      <%= f.label :name, class: "block text-gray-700 font-semibold mb-2" %>
+      <%= f.text_field :name, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" %>
+    </div>
 
-  <%= f.label :address %>
-  <%= f.text_field :address %>
+    <div class="mb-4">
+      <%= f.label :address, class: "block text-gray-700 font-semibold mb-2" %>
+      <%= f.text_field :address, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" %>
+    </div>
 
-  <%= f.label :phone %>
-  <%= f.telephone_field :phone %>
+    <div class="mb-4">
+      <%= f.label :phone, class: "block text-gray-700 font-semibold mb-2" %>
+      <%= f.telephone_field :phone, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" %>
+    </div>
 
-  <%= f.submit "Place Order", class: "btn btn-primary" %>
-<% end %>
+    <div class="text-center">
+      <%= f.submit "Place Order", class: "bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-semibold" %>
+    </div>
+  <% end %>
 
-
-<style>
-  .checkout-container {
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    max-width: 600px;
-    margin: 0 auto;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-
-  .checkout-container h1 {
-    text-align: center;
-    margin-bottom: 25px;
-  }
-
-  .form-group {
-    margin-bottom: 20px;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-
-  .form-group input,
-  .form-group textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-
-  .btn {
-    padding: 10px 20px;
-    font-size: 14px;
-    margin-top: 10px;
-  }
-
-  .back-link {
-    margin-top: 15px;
-    text-align: center;
-  }
-
-  @media (max-width: 600px) {
-    .checkout-container {
-      padding: 15px;
-    }
-
-    .btn {
-      width: 100%;
-    }
-  }
-</style>
+  <div class="text-center mt-4">
+    <%= link_to "← Back to Foods", foods_path, class: "text-gray-600 hover:text-gray-800 underline" %>
+  </div>
+</div>

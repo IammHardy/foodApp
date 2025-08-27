@@ -1,47 +1,73 @@
-<h1>Admin Dashboard</h1>
+<div class="max-w-6xl mx-auto mt-8">
+  <h1 class="text-3xl font-bold text-red-600 mb-6">Admin Dashboard</h1>
 
-<div style="margin-bottom: 20px;">
-  <p><strong>Total Orders:</strong> <%= @total_orders %></p>
-  <p><strong>Pending Orders:</strong> <%= @pending_orders %></p>
-  <p><strong>Paid Orders:</strong> <%= @paid_orders %></p>
-  <p><strong>Total Revenue:</strong> ₦<%= number_to_currency(@total_revenue, unit: "", precision: 2) %></p>
-  <p><strong>New Orders Today:</strong> <%= @new_orders_today %></p>
-</div>
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+    <div class="bg-white p-4 rounded shadow text-center">
+      <p class="text-gray-500">Total Orders</p>
+      <p class="text-xl font-bold text-red-600"><%= @total_orders %></p>
+    </div>
+    <div class="bg-white p-4 rounded shadow text-center">
+      <p class="text-gray-500">Pending Orders</p>
+      <p class="text-xl font-bold text-orange-500"><%= @pending_orders %></p>
+    </div>
+    <div class="bg-white p-4 rounded shadow text-center">
+      <p class="text-gray-500">Paid Orders</p>
+      <p class="text-xl font-bold text-green-600"><%= @paid_orders %></p>
+    </div>
+    <div class="bg-white p-4 rounded shadow text-center">
+      <p class="text-gray-500">Total Revenue</p>
+      <p class="text-xl font-bold text-red-600">₦<%= number_to_currency(@total_revenue, unit: "", precision: 2) %></p>
+    </div>
+    <div class="bg-white p-4 rounded shadow text-center">
+      <p class="text-gray-500">New Orders Today</p>
+      <p class="text-xl font-bold text-red-600"><%= @new_orders_today %></p>
+    </div>
+  </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Status</th>
-      <th>Total</th>
-      <th>Ordered At</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @orders.each do |order| %>
-      <tr>
-        <td><%= order.id %></td>
-        <td><%= order.name %></td>
-        <td>
-          <% case order.status.downcase %>
-          <% when "pending" %>
-            <span style="color: orange; font-weight: bold;">Pending</span>
-          <% when "processing" %>
-            <span style="color: green; font-weight: bold;">Paid</span>
-          <% else %>
-            <%= order.status.capitalize %>
-          <% end %>
-        </td>
-        <td>₦<%= number_to_currency(order.total_price, unit: "", precision: 2) %></td>
-        <td><%= order.created_at.strftime("%b %d, %Y %I:%M %p") %></td>
-        <td><%= link_to "View", admin_order_path(order), class: "btn btn-primary btn-sm" %></td>
-      </tr>
-    <% end %>
-    <div class="pagination">
+  <!-- Orders Table -->
+  <div class="overflow-x-auto bg-white rounded shadow">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-red-600 text-white">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-semibold">ID</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold">Name</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold">Status</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold">Total</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold">Ordered At</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @orders.each do |order| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-2"><%= order.id %></td>
+            <td class="px-4 py-2"><%= order.name %></td>
+            <td class="px-4 py-2 font-semibold">
+              <% case order.status.downcase %>
+              <% when "pending" %>
+                <span class="text-orange-500">Pending</span>
+              <% when "processing" %>
+                <span class="text-green-600">Paid</span>
+              <% else %>
+                <span><%= order.status.capitalize %></span>
+              <% end %>
+            </td>
+            <td class="px-4 py-2">₦<%= number_to_currency(order.total_price, unit: "", precision: 2) %></td>
+            <td class="px-4 py-2"><%= order.created_at.strftime("%b %d, %Y %I:%M %p") %></td>
+            <td class="px-4 py-2">
+              <%= link_to "View", admin_order_path(order), class: "bg-red-600 text-white px-3 py-1 rounded hover:bg-red-500 transition text-sm" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-4">
   <%= paginate @orders %>
 </div>
 
-  </tbody>
-</table>
+
+</div>

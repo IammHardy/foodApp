@@ -1,38 +1,61 @@
-<%= link_to "➕ Add Category", new_category_path %> |
-<%= link_to "➕ Add Food", new_food_path %>
-<%= form_with url: categories_path, method: :get, local: true do |form| %>
-  <%= form.label :search, "Search Categories or Foods" %>
-  <%= form.text_field :search, value: params[:search], placeholder: "Type to search..." %>
-  <%= form.submit "Search" %>
-<% end %>
-<% if params[:search].present? %>
-  <%= link_to "Clear Search", categories_path %>
-<% end %>
+<main class="bg-brand-white min-h-screen px-6 py-12">
 
+  <!-- Header Actions -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
+    <div class="space-x-4">
+      <%= link_to "➕ Add Category", new_category_path, class: "bg-yellow-400 text-red-700 px-4 py-2 rounded-full font-semibold shadow hover:bg-yellow-300 transition" %>
+      <%= link_to "➕ Add Food", new_food_path, class: "bg-red-600 text-white px-4 py-2 rounded-full font-semibold shadow hover:bg-red-500 transition" %>
+    </div>
 
-
-<h1>FOOD Categories</h1>
-
-<% @categories.each do |category| %>
-  <h2><%= link_to category.name, category_path(category) %></h2>
-   
-  <% if category.foods.any? %>
-    <ul>
-      <% category.foods.each do |food| %>
-        <li>
-          <%= food.name %> 
-          <%= link_to "(Edit)", edit_food_path(food) %>
-         <%= link_to "(Delete)", food_path(food, category_id: category.id), method: :delete, data: { confirm: "Are you sure?" } %>
-
-        </li>
+    <!-- Search Form -->
+    <div>
+      <%= form_with url: categories_path, method: :get, local: true, class: "flex items-center space-x-2" do |form| %>
+        <%= form.text_field :search, value: params[:search], placeholder: "Search categories or foods...", class: "border rounded-lg p-2 w-64 focus:outline-none focus:ring-2 focus:ring-red-300" %>
+        <%= form.submit "Search", class: "bg-red-600 text-white px-3 py-2 rounded hover:bg-red-500 transition" %>
       <% end %>
-    </ul>
-  <% else %>
-    <p>No foods available in this category.</p>
-  <% end %>
-<% end %>
- <% if @categories.empty? && params[:search].present? %>
-  <p>No categories or foods found matching "<%= params[:search] %>".</p>
-<% end %>
+      <% if params[:search].present? %>
+        <%= link_to "Clear Search", categories_path, class: "text-red-600 hover:underline text-sm mt-1 inline-block" %>
+      <% end %>
+    </div>
+  </div>
 
-<%= link_to "← Back to Home", categories_path %>
+  <!-- Page Title -->
+  <h1 class="text-3xl font-bold text-red-600 mb-8 text-center">Food Categories</h1>
+
+  <!-- Categories List -->
+  <div class="space-y-8">
+    <% @categories.each do |category| %>
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-2xl font-semibold text-red-600 mb-4 flex justify-between items-center">
+          <%= link_to category.name, category_path(category), class: "hover:underline" %>
+        </h2>
+
+        <% if category.foods.any? %>
+          <ul class="space-y-2">
+            <% category.foods.each do |food| %>
+              <li class="flex justify-between items-center bg-red-50 p-3 rounded-lg shadow-sm hover:shadow-md transition">
+                <span><%= food.name %></span>
+                <div class="space-x-2">
+                  <%= link_to "Edit", edit_food_path(food), class: "text-yellow-600 font-semibold hover:underline" %>
+                  <%= link_to "Delete", food_path(food, category_id: category.id), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 font-semibold hover:underline" %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-gray-500">No foods available in this category.</p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @categories.empty? && params[:search].present? %>
+      <p class="text-center text-gray-500">No categories or foods found matching "<%= params[:search] %>".</p>
+    <% end %>
+  </div>
+
+  <!-- Back Link -->
+  <div class="mt-10 text-center">
+    <%= link_to "← Back to Home", categories_path, class: "text-red-600 hover:underline font-semibold" %>
+  </div>
+
+</main>

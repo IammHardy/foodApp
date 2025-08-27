@@ -1,121 +1,96 @@
-<div class="food-show-container">
-  <% if @food.image.attached? %>
-    <%= image_tag url_for(@food.image), width: "100%", height: "auto", class: "food-image" %>
-  <% else %>
-    <p class="text-muted">No image available.</p>
-  <% end %>
+<div class="max-w-6xl mx-auto px-4 py-12">
 
-  <h1 class="food-title"><%= @food.name %></h1>
+  <!-- Food Hero Section -->
+  <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-8">
+    
+    <!-- Food Image -->
+    <div class="md:w-1/2">
+      <% if @food.image.attached? %>
+        <%= image_tag url_for(@food.image), class: "w-full h-80 md:h-full object-cover transition-transform duration-300 hover:scale-105 rounded-t-2xl md:rounded-l-2xl" %>
+      <% else %>
+        <div class="w-full h-80 flex items-center justify-center bg-gray-100 rounded-t-2xl md:rounded-l-2xl">
+          <p class="text-gray-400">No image available</p>
+        </div>
+      <% end %>
+    </div>
 
-  <p><strong>Price:</strong> ₦<%= number_to_currency(@food.price, unit: "", precision: 2) %></p>
-  <p><strong>Description:</strong> <%= @food.description.presence || "No description available." %></p>
+    <!-- Food Info -->
+    <div class="md:w-1/2 p-6 flex flex-col justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-red-600 mb-4"><%= @food.name %></h1>
+        <p class="text-gray-800 font-semibold text-xl mb-4">₦<%= number_to_currency(@food.price, unit: "", precision: 0) %></p>
+        <p class="text-gray-600 mb-4"><%= @food.description.presence || "No description available." %></p>
 
-  <div class="categories">
-    <p><strong>Categories:</strong></p>
-    <% if @food.categories.any? %>
-      <ul>
-        <% @food.categories.each do |category| %>
-          <li><%= link_to category.name, category_path(category) %>
-, class: "badge badge-secondary" %></li>
+        <!-- Categories -->
+        <% if @food.categories.any? %>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <% @food.categories.each do |category| %>
+              <%= link_to category.name, category_path(category), class: "bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-semibold hover:bg-red-200 transition" %>
+            <% end %>
+          </div>
         <% end %>
-      </ul>
+      </div>
+
+      <!-- Add to Cart Form -->
+      <div class="mt-4">
+        <%= form_with url: add_item_cart_path, method: :post, local: true, class: "flex flex-col gap-3" do %>
+          <%= hidden_field_tag :food_id, @food.id %>
+          <div>
+            <%= label_tag "quantity_#{@food.id}", "Quantity", class: "font-semibold" %>
+            <%= number_field_tag :quantity, 1, min: 1, id: "quantity_#{@food.id}", class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+          </div>
+          <%= submit_tag "Add to Cart", class: "bg-red-600 text-white px-4 py-2 rounded-full font-bold hover:bg-red-500 transition" %>
+          <%= link_to "← Back to Foods", foods_path, class: "text-center bg-gray-100 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-200 transition" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews Section -->
+  <div class="mt-12">
+    <h2 class="text-2xl font-bold text-red-600 mb-6">Customer Reviews</h2>
+
+    <% if @food.reviews.any? %>
+      <div class="space-y-6">
+        <% @food.reviews.includes(:user).each do |review| %>
+          <div class="bg-gray-50 p-4 rounded-xl shadow flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+              <p class="font-semibold text-gray-800"><%= review.user&.email || "Anonymous" %></p>
+              <div class="flex space-x-1 text-yellow-400">
+                <% filled_stars = review.rating.to_i %>
+                <% empty_stars = 5 - filled_stars %>
+                <% filled_stars.times { %>★<% } %>
+                <% empty_stars.times { %>☆<% } %>
+              </div>
+            </div>
+            <p class="text-gray-700"><%= review.comment %></p>
+          </div>
+        <% end %>
+      </div>
     <% else %>
-      <p class="text-muted">No categories assigned yet.</p>
+      <p class="text-gray-500">No reviews yet. Be the first to review!</p>
+    <% end %>
+
+    <%= link_to "See all reviews", foods_path(category_id: @food.categories.first&.id, anchor: "reviews"), class: "text-red-600 hover:underline mt-2 inline-block" %>
+  </div>
+
+  <!-- Write a Review -->
+  <div class="mt-12 bg-white p-6 rounded-2xl shadow-lg">
+    <h3 class="text-xl font-bold text-red-600 mb-4">Write a Review</h3>
+    <%= form_with(model: [@food, @review], local: true, class: "space-y-4") do |f| %>
+      <div>
+        <%= f.label :rating, "Rating (1 to 5):", class: "block font-semibold mb-1" %>
+        <%= f.number_field :rating, in: 1..5, class: "w-24 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+      <div>
+        <%= f.label :comment, "Comment:", class: "block font-semibold mb-1" %>
+        <%= f.text_area :comment, rows: 4, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+      <%= f.submit "Submit Review", class: "bg-red-600 text-white px-4 py-2 rounded-full font-bold hover:bg-red-500 transition" %>
     <% end %>
   </div>
 
-  <hr>
-
-  <%= form_with url: add_item_cart_path, method: :post, local: true do %>
-    <%= hidden_field_tag :food_id, @food.id %>
-
-    <div style="margin-bottom: 10px;">
-      <%= label_tag "quantity_#{@food.id}", "Quantity" %>
-      <%= number_field_tag :quantity, 1, min: 1, id: "quantity_#{@food.id}", style: "width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;" %>
-    </div>
-
-    <%= submit_tag "Add to Cart", class: "btn btn-primary", style: "width: 100%;" %>
-  <% end %>
-
-  <div style="margin-top: 15px;">
-    <%= link_to "← Back to Foods", foods_path, class: "btn btn-secondary", style: "width: 100%;" %>
+  <div class="mt-8">
+    <%= paginate @reviews %>
   </div>
 </div>
-<h3>Reviews</h3>
-<% @food.reviews.each do |review| %>
-  <p>
-    <strong><%= review.user.email %>:</strong> <%= review.comment %> 
-    <% filled_stars = review.rating.to_i %>
-    <% empty_stars = 5 - filled_stars %>
-    <% filled_stars.times { %>★<% } %><% empty_stars.times { %>☆<% } %>
-  </p>
-<% end %>
-<h3>Write a Review</h3>
-
-<%= form_with(model: [@food, @review], local: true) do |f| %>
-  <div>
-    <%= f.label :rating, "Rating (1 to 5):" %><br>
-    <%= f.number_field :rating, in: 1..5 %>
-  </div>
-  <div>
-    <%= f.label :comment, "Comment:" %><br>
-    <%= f.text_area :comment %>
-  </div>
-  <%= f.submit "Submit Review" %>
-<% end %>
-
-<%= paginate @reviews %>
-
-
-
-
-
-<style>
-  .food-show-container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 0 auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    max-width: 600px;
-  }
-
-  .food-title {
-    font-size: 24px;
-    margin-top: 10px;
-    color: #333;
-  }
-
-  .food-image {
-    max-height: 300px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 15px;
-  }
-
-  ul {
-    padding-left: 20px;
-  }
-
-  .badge {
-    background-color: #6c757d;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-  }
-
-  @media (max-width: 600px) {
-    .food-show-container {
-      padding: 15px;
-    }
-
-    .food-title {
-      font-size: 20px;
-    }
-
-    .btn {
-      width: 100%;
-    }
-  }
-</style>

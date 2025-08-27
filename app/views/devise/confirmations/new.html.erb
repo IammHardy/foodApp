@@ -1,16 +1,29 @@
-<h2>Resend confirmation instructions</h2>
+<div class="min-h-screen flex items-center justify-center bg-brand-white px-4 py-12">
 
-<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <div class="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
+    <h2 class="text-2xl font-bold text-red-600 mb-6 text-center">Resend Confirmation Instructions</h2>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+    <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }, class: "space-y-6") do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <!-- Email Field -->
+      <div>
+        <%= f.label :email, class: "block font-semibold mb-2" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email",
+              value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email),
+              class: "w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500" %>
+      </div>
+
+      <!-- Submit Button -->
+      <div>
+        <%= f.submit "Resend Instructions", class: "w-full bg-red-600 text-white py-2 rounded-full font-bold hover:bg-red-500 transition" %>
+      </div>
+    <% end %>
+
+    <!-- Devise Links -->
+    <div class="mt-6 text-center text-gray-600 space-y-2">
+      <%= render "devise/shared/links" %>
+    </div>
   </div>
 
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

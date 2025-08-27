@@ -1,5 +1,12 @@
-<h2>New Paid Order</h2>
-<p><strong>Name:</strong> <%= @order.name %></p>
-<p><strong>Phone:</strong> <%= @order.phone %></p>
-<p><strong>Total:</strong> ₦<%= @order.total_price %></p>
-<p><strong>Status:</strong> <%= @order.status %></p>
+<div style="font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; border-radius: 10px; max-width: 600px; margin: 0 auto; border: 1px solid #ddd;">
+  <h2 style="color: #c53030; text-align: center; margin-bottom: 20px;">New Paid Order</h2>
+
+  <p><strong style="color: #333;">Name:</strong> <%= @order.name %></p>
+  <p><strong style="color: #333;">Phone:</strong> <%= @order.phone %></p>
+  <p><strong style="color: #333;">Total:</strong> ₦<%= number_to_currency(@order.total_price, unit: "", precision: 0) %></p>
+  <p><strong style="color: #333;">Status:</strong> <span style="color: #2f855a; font-weight: bold;"><%= @order.status.capitalize %></span></p>
+
+  <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+
+  <p style="text-align: center; color: #555;">This is an automated notification from <strong>SAJUMA</strong>.</p>
+</div>

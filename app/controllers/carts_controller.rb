@@ -26,7 +26,7 @@ end
 
   def add_item
   @cart = current_cart
-  food = Food.find(params[:id])
+  food = Food.friendly.find(params[:id])
   quantity = params[:quantity].to_i
   quantity = 1 if quantity <= 0
 

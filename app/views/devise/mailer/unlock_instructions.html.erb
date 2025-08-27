@@ -1,7 +1,47 @@
-<p>Hello <%= @resource.email %>!</p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Unlock Your Account - SAJUMA</title>
+  </head>
+  <body style="background-color: #FDFDFD; font-family: Arial, sans-serif; margin:0; padding:0;">
 
-<p>Your account has been locked due to an excessive number of unsuccessful sign in attempts.</p>
+    <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
 
-<p>Click the link below to unlock your account:</p>
+      <!-- Header -->
+      <div style="background-color: #FF3B30; color: white; padding: 20px; text-align: center;">
+        <h2 style="margin: 0; font-size: 24px;">Account Locked</h2>
+      </div>
 
-<p><%= link_to 'Unlock my account', unlock_url(@resource, unlock_token: @token) %></p>
+      <!-- Body -->
+      <div style="padding: 30px; color: #333;">
+        <p style="font-size: 16px;">Hello <strong><%= @resource.email %></strong>,</p>
+
+        <p style="font-size: 16px; line-height: 1.5;">
+          Your account has been locked due to too many unsuccessful sign-in attempts.
+        </p>
+
+        <p style="font-size: 16px; line-height: 1.5;">
+          Click the button below to unlock your account and regain access:
+        </p>
+
+        <p style="text-align: center; margin: 30px 0;">
+          <a href="<%= unlock_url(@resource, unlock_token: @token) %>" 
+             style="padding: 12px 20px; background-color: #FFCC00; color: #FF3B30; font-weight: bold; text-decoration: none; border-radius: 8px; display: inline-block;">
+            Unlock My Account
+          </a>
+        </p>
+
+        <p style="font-size: 14px; color: #555;">
+          If you did not attempt to sign in, please contact our support team immediately at <a href="mailto:support@foodapp.com" style="color: #FF3B30; text-decoration: underline;">support@foodapp.com</a>.
+        </p>
+
+        <p style="margin-top: 30px; font-size: 14px; color: #555;">
+          — The SAJUMA Team
+        </p>
+      </div>
+
+    </div>
+
+  </body>
+</html>

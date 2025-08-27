@@ -1,78 +1,61 @@
-<h1>Food Categories</h1>
+<header class="bg-brand-white min-h-screen px-6 py-12">
 
-<div style="margin-bottom: 20px;">
-  <%= link_to "➕ Add Category", new_admin_category_path, class: "btn btn-primary" %>
-  <%= link_to "➕ Add Food", new_admin_food_path, class: "btn btn-success", style: "margin-left: 10px;" %>
-</div>
-
-<%= form_with url: admin_categories_path, method: :get, local: true do |form| %>
-  <div style="margin-bottom: 20px;">
-    <%= form.label :search, "Search Categories or Foods" %><br>
-    <%= form.text_field :search, value: params[:search], placeholder: "Type to search...", class: "form-control", style: "max-width: 300px;" %>
-    <%= form.submit "Search", class: "btn btn-secondary", style: "margin-top: 10px;" %>
-    <% if params[:search].present? %>
-      <%= link_to "Clear Search", admin_categories_path, class: "btn btn-warning", style: "margin-left: 10px;" %>
-    <% end %>
-  </div>
-<% end %>
-
-<% @categories.where(parent_id: nil).each do |parent| %>
-  <div class="order-card">
-    <h2><%= parent.name %></h2>
-
-    <!-- Edit/Delete parent -->
-    <div style="margin-bottom: 10px;">
-      <%= link_to "Edit", edit_admin_category_path(parent), class: "btn btn-sm btn-primary" %>
-      <%= button_to "Delete", admin_category_path(parent), method: :delete, data: { confirm: "Are you sure you want to delete this category?" }, class: "btn btn-sm btn-danger" unless parent.children.any? || parent.foods.any? %>
-      <% if parent.children.any? || parent.foods.any? %>
-        <span style="font-size: 13px; color: red;">(Delete disabled - has subcategories or foods)</span>
-      <% end %>
+  <!-- Header Actions -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
+    <div class="space-x-4">
+      <%= link_to "➕ Add Category", new_category_path, class: "bg-yellow-400 text-red-700 px-4 py-2 rounded-full font-semibold shadow hover:bg-yellow-300 transition" %>
+      <%= link_to "➕ Add Food", new_food_path, class: "bg-red-600 text-white px-4 py-2 rounded-full font-semibold shadow hover:bg-red-500 transition" %>
     </div>
 
-    <% if parent.children.any? %>
-      <div style="padding-left: 20px;">
-        <h4>Subcategories:</h4>
-        <% parent.children.each do |child| %>
-          <strong><%= child.name %></strong>
-          <%= link_to "Edit", edit_admin_category_path(child), class: "btn btn-xs btn-outline-primary" %>
-          <%= button_to "Delete", admin_category_path(child), method: :delete, data: { confirm: "Delete subcategory?" }, class: "btn btn-xs btn-outline-danger" unless child.foods.any? %>
-          <% if child.foods.any? %>
-            <span style="color: red;">(Has foods)</span>
-          <% end %>
-          <br><br>
+    <!-- Search Form -->
+    <div>
+      <%= form_with url: categories_path, method: :get, local: true, class: "flex items-center space-x-2" do |form| %>
+        <%= form.text_field :search, value: params[:search], placeholder: "Search categories or foods...", class: "border rounded-lg p-2 w-64 focus:outline-none focus:ring-2 focus:ring-red-300" %>
+        <%= form.submit "Search", class: "bg-red-600 text-white px-3 py-2 rounded hover:bg-red-500 transition" %>
+      <% end %>
+      <% if params[:search].present? %>
+        <%= link_to "Clear Search", categories_path, class: "text-red-600 hover:underline text-sm mt-1 inline-block" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Page Title -->
+  <h1 class="text-3xl font-bold text-red-600 mb-8 text-center">Food Categories</h1>
+
+  <!-- Categories List -->
+  <div class="space-y-8">
+    <% @categories.each do |category| %>
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h2 class="text-2xl font-semibold text-red-600 mb-4 flex justify-between items-center">
+          <%= link_to category.name, category_path(category), class: "hover:underline" %>
+        </h2>
+
+        <% if category.foods.any? %>
+          <ul class="space-y-2">
+            <% category.foods.each do |food| %>
+              <li class="flex justify-between items-center bg-red-50 p-3 rounded-lg shadow-sm hover:shadow-md transition">
+                <span><%= food.name %></span>
+                <div class="space-x-2">
+                  <%= link_to "Edit", edit_food_path(food), class: "text-yellow-600 font-semibold hover:underline" %>
+                  <%= link_to "Delete", food_path(food, category_id: category.id), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 font-semibold hover:underline" %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-gray-500">No foods available in this category.</p>
         <% end %>
       </div>
     <% end %>
 
-    <% if parent.foods.any? %>
-      <h4 style="margin-top: 15px;">Foods:</h4>
-      <ul>
-        <% parent.foods.each do |food| %>
-          <li>
-            <%= food.name %> -
-            <%= link_to "Edit", edit_admin_food_path(food), class: "btn btn-sm btn-primary" %>
-            <%= button_to "Delete", admin_food_path(food), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
-          </li>
-        <% end %>
-      </ul>
+    <% if @categories.empty? && params[:search].present? %>
+      <p class="text-center text-gray-500">No categories or foods found matching "<%= params[:search] %>".</p>
     <% end %>
   </div>
-<% end %>
 
-<%= link_to "← Back to Admin Dashboard", root_path, class: "btn btn-secondary", style: "margin-top: 20px;" %>
+  <!-- Back Link -->
+  <div class="mt-10 text-center">
+    <%= link_to "← Back to Home", categories_path, class: "text-red-600 hover:underline font-semibold" %>
+  </div>
 
-
-<style>
-  .order-card {
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 25px;
-    border-radius: 5px;
-  }
-
-  .btn-sm {
-    margin-left: 5px;
-    margin-top: 5px;
-  }
-</style>
+</header>

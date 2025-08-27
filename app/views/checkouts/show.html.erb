@@ -1,25 +1,46 @@
-<h1>Checkout</h1>
+<main class="bg-brand-white min-h-screen px-6 py-12">
 
-<% @cart.cart_items.each do |item| %>
-  <p><%= item.food.name %> - <%= item.quantity %> x ₦<%= item.food.price %></p>
-<% end %>
+  <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-3xl font-bold text-red-600 mb-6 text-center">Checkout</h1>
 
-<p><strong>Total: ₦<%= @cart.cart_items.sum { |item| item.food.price * item.quantity } %></strong></p>
+    <!-- Cart Items -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-4">Your Order</h2>
+      <ul class="space-y-3">
+        <% @cart.cart_items.each do |item| %>
+          <li class="flex justify-between items-center bg-red-50 p-3 rounded-lg shadow-sm">
+            <span class="font-medium"><%= item.food.name %> (x<%= item.quantity %>)</span>
+            <span class="font-semibold text-red-600">₦<%= item.food.price * item.quantity %></span>
+          </li>
+        <% end %>
+      </ul>
+      <p class="text-right mt-4 text-lg font-bold">Total: ₦<%= @cart.cart_items.sum { |item| item.food.price * item.quantity } %></p>
+    </div>
 
-<%= form_with model: @order, url: checkout_path, local: true do |form| %>
-  <div>
-  <%= form.label :name %>
-  <%= form.text_field :name %>
+    <!-- Checkout Form -->
+    <div>
+      <h2 class="text-xl font-semibold mb-4">Delivery Information</h2>
+
+      <%= form_with model: @order, url: checkout_path, local: true, class: "space-y-4" do |form| %>
+        <div>
+          <%= form.label :name, class: "block mb-1 font-medium" %>
+          <%= form.text_field :name, class: "w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-red-300" %>
+        </div>
+
+        <div>
+          <%= form.label :address, class: "block mb-1 font-medium" %>
+          <%= form.text_area :address, rows: 3, class: "w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-red-300" %>
+        </div>
+
+        <div>
+          <%= form.label :phone, class: "block mb-1 font-medium" %>
+          <%= form.text_field :phone, class: "w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-red-300" %>
+        </div>
+
+        <div class="text-center">
+          <%= form.submit "Place Order", class: "bg-red-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-500 transition" %>
+        </div>
+      <% end %>
+    </div>
   </div>
-  <div>
-    <%= form.label :address %>
-    <%= form.text_area :address %>
-  </div>
-
-  <div>
-    <%= form.label :phone %>
-    <%= form.text_field :phone %>
-  </div>
-
-  <%= form.submit "Place Order" %>
-<% end %>
+</main>

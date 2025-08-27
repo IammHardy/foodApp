@@ -1,21 +1,26 @@
-<h1>Place Your Order</h1>
+<div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow">
+  <h1 class="text-3xl font-bold text-red-600 mb-6">Place Your Order</h1>
 
-<% if @cart.cart_items.any? %>
-  <h2>Your Cart Items:</h2>
-  <ul>
-    <% @cart.cart_items.each do |item| %>
-      <li>
-        <%= item.food.name %> — Quantity: <%= item.quantity %> — Price: <%= number_to_currency(item.food.price * item.quantity) %>
-      </li>
+  <% if @cart.cart_items.any? %>
+    <h2 class="text-xl font-semibold mb-4">Your Cart Items:</h2>
+    <ul class="mb-4 space-y-2">
+      <% @cart.cart_items.each do |item| %>
+        <li class="flex justify-between border-b pb-2">
+          <span><%= item.food.name %> (x<%= item.quantity %>)</span>
+          <span class="font-semibold">₦<%= number_to_currency(item.food.price * item.quantity, unit: "", precision: 2) %></span>
+        </li>
+      <% end %>
+    </ul>
+
+    <p class="text-lg font-bold mb-4">Total: ₦<%= number_to_currency(calculate_total, unit: "", precision: 2) %></p>
+
+    <%= form_with model: @order, url: orders_path, local: true do |form| %>
+      <div class="flex justify-end">
+        <%= form.submit "Confirm Order", class: "bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-6 rounded transition" %>
+      </div>
     <% end %>
-  </ul>
-
-  <p><strong>Total: </strong> <%= number_to_currency(calculate_total) %></p>
-
-  <%= form_with model: @order, url: orders_path do |form| %>
-    <%= form.submit "Confirm Order", class: "btn btn-primary" %>
+  <% else %>
+    <p class="mb-4">Your cart is empty. Please add some foods first.</p>
+    <%= link_to "Go to Foods", foods_path, class: "bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-6 rounded transition" %>
   <% end %>
-<% else %>
-  <p>Your cart is empty. Please add some foods first.</p>
-  <%= link_to "Go to Foods", foods_path %>
-<% end %>
+</div>

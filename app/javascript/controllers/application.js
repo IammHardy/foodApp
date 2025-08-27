@@ -1,11 +1,11 @@
 import { Application } from "@hotwired/stimulus"
-import "./controllers/menu_tabs"
-
+import { definitionsFromContext } from "@hotwired/stimulus-loading"
 
 const application = Application.start()
 
-// Configure Stimulus development experience
-application.debug = false
-window.Stimulus   = application
+// auto-load all controllers from this folder
+const context = require.context(".", true, /_controller\.js$/)
+application.load(definitionsFromContext(context))
 
+window.Stimulus = application
 export { application }

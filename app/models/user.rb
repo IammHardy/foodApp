@@ -15,6 +15,14 @@ class User < ApplicationRecord
 
   after_create :create_cart
 
+  # Allow only safe attributes to be searchable with Ransack
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id email created_at updated_at] # keep it minimal & safe
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    [] # none unless you explicitly want to allow associations
+  end
  # app/models/user.rb
 def admin?
   admin

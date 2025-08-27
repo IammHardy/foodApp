@@ -1,81 +1,44 @@
-<div class="cart-container">
-  <h1>Your Cart</h1>
+<div class="cart-container bg-white p-6 rounded-2xl shadow-md max-w-3xl mx-auto mt-8">
+
+  <h1 class="text-3xl font-bold text-red-600 mb-6 text-center">Your Cart</h1>
 
   <% if @cart_items.any? %>
-    <ul class="cart-list">
+    <ul class="cart-list space-y-4">
       <% @cart_items.each do |item| %>
-  <li class="cart-item">
-    <div class="item-info">
-      <strong><%= item.food.name %></strong><br>
-      Quantity: <%= item.quantity %><br>
-      Unit Price: ₦<%= number_to_currency(item.food.price, unit: "", precision: 2) %><br>
-      Total: ₦<%= number_to_currency(item.food.price * item.quantity, unit: "", precision: 2) %>
-    </div>
+        <li class="cart-item flex justify-between items-center p-4 bg-red-50 rounded-lg shadow-sm hover:shadow-md transition">
+          <div class="item-info">
+            <strong class="text-red-600 text-lg"><%= item.food.name %></strong><br>
+            <span class="text-gray-700">Quantity: <%= item.quantity %></span><br>
+            <span class="text-gray-700">Unit Price: ₦<%= number_to_currency(item.food.price, unit: "", precision: 0) %></span><br>
+            <span class="font-semibold">Total: ₦<%= number_to_currency(item.food.price * item.quantity, unit: "", precision: 0) %></span>
+          </div>
 
-    <div class="remove-btn">
-      <%= button_to "Remove", remove_item_cart_path(item.food.id), method: :delete, data: { confirm: "Remove item?" }, class: "btn btn-sm btn-danger" %>
-    </div>
-  </li>
-<% end %>
-
+          <div class="remove-btn">
+            <%= button_to "Remove", remove_item_cart_path(item.food.id), method: :delete, data: { confirm: "Remove item?" }, class: "bg-red-600 text-white px-3 py-1 rounded hover:bg-red-500 transition" %>
+          </div>
+        </li>
+      <% end %>
     </ul>
 
-    <div class="cart-total">
-      <h3>Grand Total: ₦<%= number_to_currency(@grand_total, unit: "", precision: 2) %></h3>
+    <div class="cart-total text-right text-xl font-bold mb-6">
+      Grand Total: ₦<%= number_to_currency(@grand_total, unit: "", precision: 0) %>
     </div>
 
-    <div class="cart-actions">
-      <%= link_to "← Back to Foods", foods_path, class: "btn btn-secondary" %>
-      <%= link_to "Proceed to Checkout", checkout_path, class: "btn btn-primary" %>
-
+    <div class="cart-actions flex justify-between gap-4 flex-wrap">
+      <%= link_to "← Back to Foods", foods_path, class: "bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition" %>
+      <%= link_to "Proceed to Checkout", checkout_path, class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 transition" %>
     </div>
+
   <% else %>
-    <p>Your cart is empty.</p>
-    <%= link_to "Browse Foods", foods_path, class: "btn btn-primary" %>
+    <p class="text-center text-gray-500 mb-4">Your cart is empty.</p>
+    <div class="text-center">
+      <%= link_to "Browse Foods", foods_path, class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500 transition" %>
+    </div>
   <% end %>
+
 </div>
 
 <style>
-  .cart-container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 600px;
-    margin: 0 auto;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-
-  .cart-list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 20px;
-  }
-
-  .cart-item {
-    border-bottom: 1px solid #ccc;
-    padding: 15px 0;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .item-info {
-    flex: 1;
-  }
-
-  .cart-total {
-    text-align: right;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-
-  .cart-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
   @media (max-width: 600px) {
     .cart-item {
       flex-direction: column;
@@ -84,10 +47,7 @@
 
     .cart-actions {
       flex-direction: column;
-    }
-
-    .btn {
-      width: 100%;
+      gap: 10px;
     }
 
     .cart-total {

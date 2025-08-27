@@ -1,48 +1,54 @@
-<h2>Order Summary</h2>
+<div class="max-w-3xl mx-auto bg-white/95 backdrop-blur p-8 rounded-2xl shadow-lg border border-red-100">
+  <!-- Title -->
+  <h2 class="text-3xl font-extrabold text-red-600 mb-6 text-center">Order Summary</h2>
 
-<p><strong>Total:</strong> ₦<%= number_with_precision(@order.total_price || 0, precision: 0) %></p>
+  <!-- Order Info -->
+  <div class="space-y-3 mb-8 text-gray-700">
+    <p><span class="font-semibold text-gray-900">Total:</span> ₦<%= number_with_precision(@order.total_price || 0, precision: 0) %></p>
+    <p><span class="font-semibold text-gray-900">Status:</span> <span class="capitalize px-2 py-1 rounded-md 
+        <%= @order.pending? ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700' %>">
+        <%= @order.status %>
+      </span>
+    </p>
+    <p><span class="font-semibold text-gray-900">Name:</span> <%= @order.name.present? ? @order.name : (@order.user&.email || "Name not provided") %></p>
+    <p><span class="font-semibold text-gray-900">Address:</span> <%= @order.address %></p>
+    <p><span class="font-semibold text-gray-900">Phone:</span> <%= @order.phone %></p>
+  </div>
 
-<p><strong>Status:</strong> <%= @order.status.capitalize %></p>
-<p><strong>Name:</strong> 
-  <%= @order.name.present? ? @order.name : (@order.user&.email || "Name not provided") %>
-</p>
-<p><strong>Address:</strong> <%= @order.address %></p>
-<p><strong>Phone:</strong> <%= @order.phone %></p>
+  <!-- Items -->
+  <h3 class="text-xl font-bold text-gray-800 mb-3 border-b border-red-200 pb-2">Items</h3>
+  <% if @order.order_items.any? %>
+    <ul class="space-y-2 mb-8">
+      <% @order.order_items.each do |item| %>
+        <li class="flex justify-between items-center bg-red-50 px-4 py-2 rounded-lg">
+          <span><%= item.food.name %> × <%= item.quantity %></span>
+          <span class="font-semibold text-red-600">₦<%= number_with_precision(item.food.price * item.quantity, precision: 2) %></span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="mb-8 text-gray-500 italic">No items found.</p>
+  <% end %>
 
-
-
-
-<h3>Items:</h3>
-<% if @order.order_items.any? %>
-  <ul>
-    <% @order.order_items.each do |item| %>
-      <li>
-        <%= item.food.name %> - Quantity: <%= item.quantity %> - ₦<%= item.food.price * item.quantity %>
-      </li>
+  <!-- Actions -->
+  <div class="flex flex-col sm:flex-row sm:justify-center sm:space-x-4 space-y-3 sm:space-y-0 mb-8">
+    <% if @order.pending? %>
+      <%= button_to "Proceed to Payment", paystack_checkout_path(order_id: @order.id), method: :post, data: { turbo: false }, 
+        class: "bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition" %>
+    <% elsif @order.processing? %>
+      <div class="text-center sm:text-left">
+        <p class="text-green-600 font-semibold mb-2">✅ Payment Verified! Your order is now being processed.</p>
+        <%= link_to "Message Admin", message_admin_order_path(@order), 
+          class: "inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition", 
+          target: "_blank" %>
+      </div>
     <% end %>
-  </ul>
-<% else %>
-  <p>No items found.</p>
-<% end %>
+    <%= link_to 'Download Summary', download_order_summary_path(@order, reference: @order.payment_reference), 
+      class: 'bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition text-center' %>
+  </div>
 
-
-
-<% if @order.pending? %>
-  <%= button_to "Proceed to Payment", paystack_checkout_path(order_id: @order.id), method: :post, data: { turbo: false }, class: "btn btn-success" %>
-<% elsif @order.processing? %>
-  <p><strong>Payment Verified!</strong> Your order is now being processed.</p>
-  <%= link_to "Message Admin", message_admin_order_path(@order), class: "btn btn-success", target: "_blank" %>
-  <%end%>
-<%= link_to 'Download Summary', download_order_summary_path(@order, reference: @order.payment_reference), class: 'btn' %>
-
-
-
-
-
-
-
-
-  
-
-
-
+  <!-- Back -->
+  <div class="text-center">
+    <%= link_to '← Back to Orders', orders_path, class: 'text-red-600 hover:text-red-800 font-medium underline' %>
+  </div>
+</div>

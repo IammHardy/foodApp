@@ -1,6 +1,7 @@
 class Admin::OrdersController < Admin::BaseController
 
  def index
+  @orders = Order.order(created_at: :desc).page(params[:page]).per(10)
   search_params = params[:q]&.dup || {}
 
   if search_params["created_at_lteq"].present?

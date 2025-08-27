@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Admin Dashboard" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+  </head>
+
+  <body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- ADMIN HEADER -->
+    <header class="bg-red-600 text-white shadow sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto flex items-center justify-between px-4 h-20 relative">
+
+        <!-- Logo -->
+        <%= link_to admin_dashboard_path, class: "text-3xl font-extrabold tracking-wide text-white" do %>
+          Sajuma Admin
+        <% end %>
+
+        <!-- Desktop Menu -->
+        <nav class="hidden lg:flex gap-6 items-center">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "hover:text-yellow-400 font-medium" %>
+          <%= link_to "Manage Foods", admin_foods_path, class: "hover:text-yellow-400 font-medium" %>
+          <%= link_to "Manage Categories", admin_categories_path, class: "hover:text-yellow-400 font-medium" %>
+          <%= link_to "Orders", admin_orders_path, class: "hover:text-yellow-400 font-medium" %>
+          <%= link_to "Users", admin_users_path, class: "hover:text-yellow-400 font-medium" %>
+          <%= button_to "Logout", destroy_user_session_path, method: :delete, form_class: "inline", class: "hover:text-yellow-400 font-medium" %>
+        </nav>
+
+        <!-- Hamburger Menu (mobile) -->
+        <button id="admin-hamburger-btn"
+                class="lg:hidden text-white text-3xl focus:outline-none focus:ring-2 focus:ring-yellow-400 rounded-md p-2 transition">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Mobile Menu -->
+        <nav id="admin-mobile-nav"
+             class="hidden absolute top-full right-0 left-0 bg-white shadow-lg z-50 flex flex-col gap-2 p-4 rounded-b-lg transition-all duration-300 transform -translate-y-5 opacity-0">
+          <%= link_to "Dashboard", admin_dashboard_path, class: "block px-4 py-2 text-red-600 hover:bg-red-100 rounded font-medium" %>
+          <%= link_to "Manage Foods", admin_foods_path, class: "block px-4 py-2 text-red-600 hover:bg-red-100 rounded font-medium" %>
+          <%= link_to "Manage Categories", admin_categories_path, class: "block px-4 py-2 text-red-600 hover:bg-red-100 rounded font-medium" %>
+          <%= link_to "Orders", admin_orders_path, class: "block px-4 py-2 text-red-600 hover:bg-red-100 rounded font-medium" %>
+          <%= link_to "Users", admin_users_path, class: "block px-4 py-2 text-red-600 hover:bg-red-100 rounded font-medium" %>
+          <%= button_to "Logout", destroy_user_session_path, method: :delete, form_class: "inline", class: "block px-4 py-2 text-red-600 hover:bg-red-100 rounded font-medium" %>
+        </nav>
+      </div>
+    </header>
+
+    <!-- FLASH MESSAGES -->
+    <div id="flash-container" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 space-y-2">
+      <% flash.each do |type, message| %>
+        <% css_class = case type.to_sym
+                      when :notice then "bg-green-500"
+                      when :alert then "bg-red-500"
+                      else "bg-blue-500"
+                      end %>
+        <div class="p-4 rounded-md text-center font-bold text-white shadow-lg animate-fade-in-out">
+          <%= message %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto p-4">
+      <%= yield %>
+    </main>
+
+    <!-- FLASH SCRIPT -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const flashContainer = document.getElementById("flash-container");
+        if (flashContainer) {
+          setTimeout(() => {
+            flashContainer.style.transition = "opacity 0.5s";
+            flashContainer.style.opacity = "0";
+            setTimeout(() => flashContainer.remove(), 500);
+          }, 4000);
+        }
+      });
+    </script>
+
+    <!-- HAMBURGER SCRIPT -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const btn = document.getElementById("admin-hamburger-btn");
+        const nav = document.getElementById("admin-mobile-nav");
+        const icon = btn.querySelector("i");
+
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          nav.classList.toggle("hidden");
+
+          if (!nav.classList.contains("hidden")) {
+            // show menu
+            nav.classList.remove("-translate-y-5", "opacity-0");
+            nav.classList.add("translate-y-0", "opacity-100");
+            icon.classList.replace("fa-bars", "fa-times");
+          } else {
+            // hide menu
+            nav.classList.add("-translate-y-5", "opacity-0");
+            nav.classList.remove("translate-y-0", "opacity-100");
+            icon.classList.replace("fa-times", "fa-bars");
+          }
+        });
+
+        // Close menu if user clicks outside
+        document.addEventListener("click", (e) => {
+          if (!btn.contains(e.target) && !nav.contains(e.target) && !nav.classList.contains("hidden")) {
+            nav.classList.add("-translate-y-5", "opacity-0");
+            nav.classList.remove("translate-y-0", "opacity-100");
+            setTimeout(() => nav.classList.add("hidden"), 300);
+            icon.classList.replace("fa-times", "fa-bars");
+          }
+        });
+      });
+    </script>
+
+    <style>
+      @keyframes fade-in-out {
+        0% { opacity: 0; transform: translateY(-10px); }
+        10% { opacity: 1; transform: translateY(0); }
+        90% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(-10px); }
+      }
+      .animate-fade-in-out {
+        animation: fade-in-out 4s ease forwards;
+      }
+    </style>
+  </body>
+</html>

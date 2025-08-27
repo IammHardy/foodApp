@@ -1,4 +1,4 @@
-class Admin::FoodsController < ApplicationController
+class Admin::FoodsController < Admin::BaseController
   before_action :authenticate_user!
   before_action :check_admin
   before_action :set_food, only: [:show, :edit, :update, :destroy]
@@ -57,8 +57,10 @@ end
   private
 
   def set_food
-    @food = Food.find(params[:id])
-  end
+  @food = Food.friendly.find(params[:id])
+rescue ActiveRecord::RecordNotFound
+  redirect_to admin_foods_path, alert: "Food not found."
+end
 
   def food_params
   params.require(:food).permit(:name, :description, :price, :image, category_ids: [])

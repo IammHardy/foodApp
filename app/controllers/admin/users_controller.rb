@@ -1,6 +1,7 @@
-class Admin::UsersController < ApplicationController
+class Admin::UsersController < Admin::BaseController
   before_action :authenticate_user!
   before_action :require_admin
+  before_action :set_user, only: [:show, :destroy]
 
   def index
     @q = User.ransack(params[:q])
@@ -8,12 +9,12 @@ class Admin::UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
   end
 
   def destroy
-    user = User.find(params[:id])
-    if user.destroy
+    if @user == current_user
+      redirect_to admin_users_path, alert: "You cannot delete yourself."
+    elsif @user.destroy
       redirect_to admin_users_path, notice: "User deleted"
     else
       redirect_to admin_users_path, alert: "Failed to delete user"
@@ -21,6 +22,10 @@ class Admin::UsersController < ApplicationController
   end
 
   private
+
+  def set_user
+    @user = User.find(params[:id])
+  end
 
   def require_admin
     redirect_to root_path, alert: "Access denied." unless current_user&.admin?

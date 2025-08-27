@@ -1,69 +1,33 @@
 class FoodsController < ApplicationController
- 
+  before_action :set_food, only: [:show]
 
   def index
-    @foods = Food.includes(:reviews).all
-  @main_categories = Category.where(parent_id: nil).includes(:children)
-  @foods = Food.includes(:categories)
-end
+    if params[:category_id].present?
+      # Find by slug using FriendlyId
+      @selected_category = Category.friendly.find_by(slug: params[:category_id])
 
-  def new
-    @food = Food.new
-    @categories = Category.all
-  end
-
-  def create
-    @food = Food.new(food_params)
-    if @food.save
-      redirect_to root_path, notice: "Food was sucessfully created."
+      if @selected_category
+        @foods = @selected_category.foods.includes(:categories, :reviews)
+      else
+        flash[:alert] = "Category not found"
+        redirect_to root_path and return
+      end
     else
-      @categories = Category.all
-      render :new
+      @foods = Food.includes(:categories, :reviews).all
+    end
   end
-end
-def edit
-  @food = Food.find(params[:id])
-  @categories = Category.all
-end
-def update
-  @food = Food.find(params[:id])
-  if @food.update(food_params)
-    redirect_to root_path, notice: "Food was successfully updated."
-  else
-    @categories = Category.all
-    render :edit
+
+  def show
+    # @food is already set by set_food
+    @reviews = @food.reviews.includes(:user).order(created_at: :desc).page(params[:page]).per(5)
+    @review = @food.reviews.new
   end
-end
-def destroy
-  @food = Food.find(params[:id])
-  category_id = params[:category_id]
 
-  @food.destroy
+  private
 
-  if category_id.present?
-    redirect_to category_path(category_id), notice: "Food deleted successfully."
-  else
-    redirect_to categories_path, notice: "Food deleted successfully."
+  def set_food
+    @food = Food.friendly.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to foods_path, alert: "Food not found."
   end
-end
-
-
-
-def show
- @food = Food.find(params[:id])
-  @reviews = @food.reviews.order(created_at: :desc).page(params[:page]).per(5)
-  @review = Review.new
-end
-
-
-private
-
-def food_params
-  params.require(:food).permit(:name, category_ids: [])
-end
-
-private
-  def check_admin
-  redirect_to root_path, alert: "Access denied." unless current_user&.admin?
-end
 end

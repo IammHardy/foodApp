@@ -1,14 +1,22 @@
-<h1>Add a New Category</h1>
+<main class="bg-brand-white min-h-screen flex flex-col items-center justify-center px-6 py-12">
 
-<%= form_with model: @category, local: true do |form| %>
-  <div>
-    <%= form.label :name, "Category Name" %><br>
-    <%= form.text_field :name %>
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-3xl font-bold text-red-600 mb-6 text-center">Add a New Category</h1>
+
+    <%= form_with model: @category, local: true, class: "space-y-4" do |form| %>
+      <div>
+        <%= form.label :name, "Category Name", class: "block font-semibold mb-1" %>
+        <%= form.text_field :name, class: "w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-300" %>
+      </div>
+
+      <div>
+        <%= form.submit "Create Category", class: "w-full bg-red-600 text-white font-semibold py-2 rounded-lg hover:bg-red-500 transition" %>
+      </div>
+    <% end %>
+
+    <div class="mt-4 text-center">
+      <%= link_to "← Back to Home", root_path, class: "text-red-600 hover:underline font-semibold" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.submit "Create Category" %>
-  </div>
-<% end %>
-
-<%= link_to "Back to Home", root_path %>
+</main>
