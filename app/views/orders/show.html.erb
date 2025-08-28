@@ -43,8 +43,12 @@
           target: "_blank" %>
       </div>
     <% end %>
-    <%= link_to 'Download Summary', download_order_summary_path(@order, reference: @order.payment_reference), 
-      class: 'bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition text-center' %>
+    <%= link_to 'Download Summary', download_summary_order_path(@order, reference: @order.payment_reference), 
+    class: 'bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition text-center' %>
+
+
+
+
   </div>
 
   <!-- Back -->

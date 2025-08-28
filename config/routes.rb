@@ -2,8 +2,12 @@ Rails.application.routes.draw do
   # Root path
   root "landing#index"
 
-  # Devise user authentication
-  devise_for :users
+  # Devise user authentication with Omniauth callbacks
+ # Devise user authentication with Omniauth
+devise_for :users, controllers: {
+  omniauth_callbacks: "users/omniauth_callbacks"
+}
+
 
   # Static pages
   get "about", to: "pages#about"
@@ -31,9 +35,9 @@ Rails.application.routes.draw do
     end
     member do
       get :message_admin
+      get :download_summary, to: "orders#download_summary"
     end
   end
-  get 'orders/:id/download_summary', to: 'orders#download_summary', as: 'download_order_summary'
 
   # Checkout & Cart
   resource :checkout, only: [:show, :create]

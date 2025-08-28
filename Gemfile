@@ -95,5 +95,11 @@ gem 'image_processing', '~> 1.12'
 gem "mini_magick"
 gem 'friendly_id', '~> 5.4.0'
 
+gem 'omniauth-google-oauth2'
+gem 'omniauth-tiktok'
+gem 'omniauth-facebook'
+
+gem 'jwt', '~> 2.6'
+
 
 

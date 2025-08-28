@@ -4,7 +4,7 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :confirmable
+         :confirmable, :omniauthable, omniauth_providers: [:google_oauth2, :tiktok, :facebook]
 
   # Add any user relationships or validations here
   has_one :cart, dependent: :destroy
@@ -28,6 +28,17 @@ def admin?
   admin
 end
 
+def self.from_omniauth(auth)
+  return nil unless auth
+
+  user = find_or_initialize_by(provider: auth.provider, uid: auth.uid)
+  user.email = auth.info.email || "#{auth.uid}@#{auth.provider}.com"
+  user.password ||= Devise.friendly_token[0, 20]
+  user.name = auth.info.name if user.respond_to?(:name)
+  user.confirmed_at ||= Time.current
+  user.save!
+  user
+end
 
 
 end
