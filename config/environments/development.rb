@@ -19,7 +19,7 @@ config.active_storage.service = :local
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
- config.action_mailer.default_url_options = { host: "838f97e501f9.ngrok-free.app", protocol: "https" }
+ config.action_mailer.default_url_options = { host: "5cd6dc90539c.ngrok-free.app", protocol: "https" }
   
 
   config.action_mailer.smtp_settings = {

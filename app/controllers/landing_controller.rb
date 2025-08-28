@@ -2,6 +2,7 @@ class LandingController < ApplicationController
   include Rails.application.routes.url_helpers
   
   def index
+    
     @foods = Food.with_attached_image
     @main_categories = Category.where(parent_id: nil).includes(:children)
 

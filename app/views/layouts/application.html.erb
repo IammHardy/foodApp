@@ -102,42 +102,9 @@
   </div>
 </header>
 
-<script>
-  const btn = document.getElementById('hamburger-btn');
-  const nav = document.getElementById('mobile-nav');
 
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation(); // prevent document click
-    const icon = btn.querySelector('i');
-    nav.classList.toggle('hidden');
-    if (!nav.classList.contains('hidden')) {
-      nav.classList.remove('-translate-y-5', 'opacity-0');
-      nav.classList.add('translate-y-0', 'opacity-100');
-      icon.classList.remove('fa-bars');
-      icon.classList.add('fa-times');
-    } else {
-      nav.classList.add('-translate-y-5', 'opacity-0');
-      nav.classList.remove('translate-y-0', 'opacity-100');
-      icon.classList.remove('fa-times');
-      icon.classList.add('fa-bars');
-    }
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!btn.contains(e.target) && !nav.contains(e.target)) {
-      if (!nav.classList.contains('hidden')) {
-        nav.classList.add('-translate-y-5', 'opacity-0');
-        nav.classList.remove('translate-y-0', 'opacity-100');
-        setTimeout(() => nav.classList.add('hidden'), 300);
-        btn.querySelector('i').classList.remove('fa-times');
-        btn.querySelector('i').classList.add('fa-bars');
-      }
-    }
-  });
-</script>
-
-
-    <!-- FLASH -->
+   
+ <!-- FLASH -->
     <div id="flash-container" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 space-y-2">
       <% flash.each do |type, message| %>
         <% css_class = case type.to_sym
@@ -150,11 +117,7 @@
         </div>
       <% end %>
     </div>
-
-    <!-- MAIN CONTENT -->
-    <%= yield %>
-
-    <!-- FLASH SCRIPT -->
+                      <!-- FLASH SCRIPT -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const flashContainer = document.getElementById("flash-container");
@@ -179,6 +142,13 @@
         animation: fade-in-out 4s ease forwards;
       }
     </style>
+
+
+
+    <!-- MAIN CONTENT -->
+    <%= yield %>
+
+   
    
   </body>
 </html>
